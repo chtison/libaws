@@ -1,4 +1,4 @@
-STACK-NAME := SNS-Topic-Main
+STACK-NAME := SNS-TOPIC-Main
 
 .PHONY: all step1 deploy clean
 

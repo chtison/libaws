@@ -1,4 +1,4 @@
-# SNS-Topic-Main
+# SNS-TOPIC-Main
 
 ### Usage
 At least one endpoint for the SNS topic must be filled in **data.json**.

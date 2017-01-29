@@ -3,8 +3,8 @@ Resources:
     Topic:
         Type: AWS::SNS::Topic
         Properties:
-            DisplayName: SNS-Topic-Main
-            TopicName: SNS-Topic-Main
+            DisplayName: SNS-TOPIC-Main
+            TopicName: SNS-TOPIC-Main
             Subscription:
 {{- range .EndpointsSMS }}
                 - Protocol: sms
@@ -19,4 +19,4 @@ Outputs:
     TopicARN:
         Value: !Ref Topic
         Export:
-            Name: SNS-Topic-Main
+            Name: SNS-TOPIC-Main
