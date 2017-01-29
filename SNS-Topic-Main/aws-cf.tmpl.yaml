@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+    Topic:
+        Type: AWS::SNS::Topic
+        Properties:
+            DisplayName: SNS-Topic-Main
+            TopicName: SNS-Topic-Main
+            Subscription:
+{{- range .EndpointsSMS }}
+                - Protocol: sms
+                  Endpoint: '{{ . }}'
+{{- end }}
+{{- range .EndpointsEmail }}
+                - Protocol: email
+                  Endpoint: '{{ . }}'
+{{- end }}
+
+Outputs:
+    TopicARN:
+        Value: !Ref Topic
+        Export:
+            Name: SNS-Topic-Main
