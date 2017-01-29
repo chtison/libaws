@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Resources:
+    CheckGolangVersion:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: function.handler
+            Runtime: python2.7
+            CodeUri: lambda.zip
+            Timeout: 15
+            Role: !GetAtt Role.Arn
+            Environment:
+                Variables:
+                    VERSION: '{{ .GolangVersion }}'
+                    TOPIC: !ImportValue {{ .Topic }}
+            Events:
+{{- range .CronHours }}
+                CheckGolangVersion{{ . }}:
+                    Type: Schedule
+                    Properties:
+                        Schedule: cron(* {{ . }} * * ? *)
+{{- end }}
+
+    Role:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    Effect: Allow
+                    Principal:
+                        Service: lambda.amazonaws.com
+                    Action: sts:AssumeRole
+            ManagedPolicyArns:
+                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+            Policies:
+                - PolicyName: CheckGolangVersion-Policy
+                  PolicyDocument:
+                      Version: 2012-10-17
+                      Statement:
+                          Effect: Allow
+                          Action: sns:Publish
+                          Resource: !ImportValue {{ .Topic }}
