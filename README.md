@@ -1,4 +1,4 @@
-# LibAWS
+![libaws](misc/libaws.png)
 
 LibAWS is a collection of AWS cloudformation stacks.
 
