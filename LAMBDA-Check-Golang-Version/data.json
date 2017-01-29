@@ -2,7 +2,7 @@
 	"Topic": "SNS-TOPIC-Main",
 	"GolangVersion": "go1.7.5",
 	"CronHours": [
-		"10",
-		"20"
+		10,
+		20
 	]
 }
