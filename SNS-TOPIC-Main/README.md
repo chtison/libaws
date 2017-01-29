@@ -1,6 +1,6 @@
 # SNS-TOPIC-Main
 
-### Usage
+## Usage
 At least one endpoint for the SNS topic must be filled in **data.json**.
 ###### data.json:
 ```
@@ -19,7 +19,7 @@ At least one endpoint for the SNS topic must be filled in **data.json**.
 - **EndpointsEmail**
 	- list of emails
 
-#### Deploy the stack
+### Deploy the stack
 ```sh
 make deploy
 ```
