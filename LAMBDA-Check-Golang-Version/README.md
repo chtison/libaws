@@ -16,7 +16,7 @@
 - **GolangVersion**: **string** (**required**)
   - Sets to the VERSION variable in [function.py](function.py) environment.
 - **CronHours**: **[0 <= x <= 23]** (**required**)
-  - Sets the hours (UTC) at which lambda function will be called every day.
+  - Sets the hours (GMT/UTC) at which lambda function will be called every day.
 
 ### Deploy the stack
 ```sh
