@@ -13,13 +13,14 @@ Resources:
                 Variables:
                     VERSION: '{{ .GolangVersion }}'
                     TOPIC: !ImportValue {{ .Topic }}
+{{- with .Schedules }}
             Events:
-{{- range .CronHours }}
-                CheckGolangVersion{{ . }}:
+{{- range $i, $e := . }}
+                CheckGolangVersion{{ $i }}:
                     Type: Schedule
                     Properties:
-                        Schedule: cron(* {{ . }} * * ? *)
-{{- end }}
+                        Schedule: {{ $e }}
+{{- end }}{{ end }}
 
     Role:
         Type: AWS::IAM::Role

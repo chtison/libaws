@@ -13,6 +13,9 @@ step1: objs/aws-sam.step1.yaml
 objs/aws-sam.step1.yaml: objs/ aws-sam.tmpl.yaml data.json
 	tmpl aws-sam.tmpl.yaml data.json $@
 
+validate: objs/aws-sam.step1.yaml
+	aws cloudformation validate-template --template-body file://$<
+
 pip: objs/bs4/
 objs/bs4/:
 	pip install -t objs/ beautifulsoup4

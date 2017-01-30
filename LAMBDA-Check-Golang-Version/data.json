@@ -1,8 +1,8 @@
 {
 	"Topic": "SNS-TOPIC-Main",
 	"GolangVersion": "go1.7.5",
-	"CronHours": [
-		10,
-		20
+	"Schedules": [
+		"cron(0 10 * * ? *)",
+		"cron(0 20 * * ? *)"
 	]
 }
