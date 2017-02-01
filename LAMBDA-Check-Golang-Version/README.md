@@ -18,7 +18,7 @@
 - **Schedules**: (**optional**)
   - List of [schedule expressions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html).
 
-### Deploy the stack
+### Usage
 ```sh
-make deploy S3-BUCKET=bucket-name
+make help
 ```

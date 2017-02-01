@@ -1,5 +1,6 @@
 {
 	"Topic": "SNS-TOPIC-Main",
+	"PolicyPublishTopic": "SNS-TOPIC-Main-POLICY",
 	"GolangVersion": "go1.7.5",
 	"Schedules": [
 		"cron(0 10 * * ? *)",

@@ -14,5 +14,4 @@ def handler(event, context):
 	if version != VERSION:
 		msg = 'Golang: New version detected: {}'.format(version)
 		print msg
-		print 'Publishing to SNS topic: {}'.format(TOPIC)
 		sns.publish(TopicArn=TOPIC, Subject=msg, Message=msg)
