@@ -12,13 +12,12 @@
 	]
 }
 ```
-At least one endpoint for the SNS topic must be filled in **data.json**.
-- **EndpointsSMS**
-	- list of telephone numbers in [E.164](https://en.wikipedia.org/wiki/List_of_country_calling_codes) format
-- **EndpointsEmail**
+- **EndpointsSMS**: (**optional**)
+	- list of telephone numbers in [E.164 format ](https://en.wikipedia.org/wiki/List_of_country_calling_codes)
+- **EndpointsEmail**: (**optional**)
 	- list of emails
 
-### Deploy the stack
+### Usage
 ```sh
-make deploy
+make help
 ```
