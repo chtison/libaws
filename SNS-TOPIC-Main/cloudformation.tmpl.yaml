@@ -2,9 +2,6 @@ AWSTemplateFormatVersion: "2010-09-09"
 Resources:
     Topic:
         Type: AWS::SNS::Topic
-        Properties:
-            DisplayName: SNS-TOPIC-Main
-            TopicName: SNS-TOPIC-Main
 
 {{- range $i, $e := .EndpointsSMS }}
 
