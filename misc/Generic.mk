@@ -7,8 +7,10 @@ make delete            # delete stack named $(STACK-NAME) from your aws account
 make clean             # remove local temporary files
 endef
 
-include ../misc/Base.mk
+PWD := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-DEPLOY_FILE := $(OBJ_DIR)/$(OBJ_STEP1)
+include $(PWD)/Base.mk
+
+DEPLOY_FILE := $(OBJ_DIR)/$(OBJ_TEMPLATE)
 
 deploy: $(DEPLOY_FILE)

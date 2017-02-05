@@ -25,7 +25,6 @@ $(OBJ_DIR)/$(OBJ_TEMPLATE): $(OBJ_DIR) $(MAIN_TMPL) $(DATA_TMPL)
 validate: $(OBJ_DIR)/$(OBJ_TEMPLATE)
 	aws cloudformation validate-template --template-body file://$<
 
-
 deploy:
 	@[ "$(STACK-NAME)" ] || (echo ERROR: STACK-NAME variable is required && false)
 	aws cloudformation deploy          \
