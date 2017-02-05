@@ -1,0 +1,6 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+    UserPool:
+        Type: Custom::UserPool
+        Properties:
+            ServiceToken: !ImportValue {{ .ServiceToken }}
