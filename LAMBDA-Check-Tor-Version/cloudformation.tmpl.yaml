@@ -12,6 +12,7 @@ Resources:
             Role: !GetAtt Role.Arn
             Environment:
                 Variables:
+                    VERSION: '{{ .TorVersion }}'
                     TOPIC: !ImportValue {{ .Topic }}
 {{- with .Schedules }}
             Events:

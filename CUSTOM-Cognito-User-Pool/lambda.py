@@ -16,7 +16,7 @@ def decorator(f):
 		data['StackId'] = event['StackId']
 		data['RequestId'] = event['RequestId']
 		data['LogicalResourceId'] = event['LogicalResourceId']
-		data['PhysicalResourceId'] = event.get('PhysicalResourceId', data['RequestId']+data['LogicalResourceId'])
+		data['PhysicalResourceId'] = event.get('PhysicalResourceId', data['StackId'].split('/')[1]+'-'+data['LogicalResourceId']+'-'+data['RequestId'])
 		f(event, data)
 		data = json.dumps(data)
 		requests.put(event['ResponseURL'], data=data)
