@@ -16,4 +16,3 @@ You are now in a dedicated docker environment for this project.
 ```sh
 aws configure
 ```
-You can now follow the READMEs instructions in the subdirectories.
