@@ -7,7 +7,7 @@ Resources:
             Runtime: python2.7
             Code: lambda.zip
             Handler: lambda.handler
-            Timeout: 10
+            Timeout: 15
             Role: !GetAtt Role.Arn
 
     Role:
@@ -23,12 +23,21 @@ Resources:
             ManagedPolicyArns:
                 - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
-    # Policy:
-    #     Type: AWS::IAM::Policy
-    #     DependsOn: Role
-    #     Properties:
-    #         Roles:
-    #             - !Ref Role
+    Policy:
+        Type: AWS::IAM::ManagedPolicy
+        DependsOn: Role
+        Properties:
+            PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    Effect: Allow
+                    Action:
+                        - cognito-idp:CreateUserPool
+                        - cognito-idp:DeleteUserPool
+                        - cognito-idp:UpdateUserPool
+                    Resource: '*'
+            Roles:
+                - !Ref Role
 
 Outputs:
     FunctionArn:
