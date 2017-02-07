@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+    Function:
+        Type: AWS::Serverless::Function
+        Properties:
+            Runtime: python2.7
+            Handler: lambda.handler
+            CodeUri: lambda.zip
+
+    Permission:
+        Type: AWS::Lambda::Permission
+        Properties:
+            Action: lambda:InvokeFunction
+            FunctionName: !GetAtt Function.Arn
+            Principal: apigateway.amazonaws.com
+
+    Api:
+        Type: AWS::ApiGateway::RestApi
+        Properties:
+            Body:
+                swagger: '2.0'
+                info:
+                    title: {{ .ApiTitle }}
+                    version: latest
+                schemes:
+                    - https
+                paths:
+                    /:
+                        x-amazon-apigateway-any-method:
+                            produces:
+                                - application/json
+                            responses:
+                                '200':
+                                    description: OK
+                            x-amazon-apigateway-integration:
+                                type: aws
+                                httpMethod: POST
+                                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
+                                passthroughBehavior: when_no_match
+                                contentHandling: CONVERT_TO_TEXT
+                                responses:
+                                    default:
+                                        statusCode: '200'
+
+    Deployment:
+        Type: AWS::ApiGateway::Deployment
+        Properties:
+            RestApiId: !Ref Api
+            StageName: {{ .StageName }}
+
+Outputs:
+    ApiUrl:
+        Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/{{ .StageName }}'
+        Export:
+            Name: API-Test-Custom-Resource-URL
