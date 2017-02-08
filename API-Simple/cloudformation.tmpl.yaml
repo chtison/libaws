@@ -38,11 +38,23 @@ Resources:
                                 type: aws
                                 httpMethod: POST
                                 uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
-                                passthroughBehavior: when_no_match
-                                contentHandling: CONVERT_TO_TEXT
+                                passthroughBehavior: never
                                 responses:
                                     default:
                                         statusCode: '200'
+                                requestTemplates:
+                                    application/json: |-
+                                        {
+                                            "method": "$context.httpMethod",
+                                            "sourceIp": "$context.identity.sourceIp",
+                                            "userAgent": "$context.identity.userAgent",
+                                            "queryParams": {
+                                                #foreach($param in $input.params().querystring.keySet())
+                                                    "$param": "$util.escapeJavaScript($input.params().querystring.get($param))" #if($foreach.hasNext),#end
+                                                #end
+                                            },
+                                            "body": $util.escapeJavaScript($input.json('$'))
+                                        }
 
     Deployment:
         Type: AWS::ApiGateway::Deployment
