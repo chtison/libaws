@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+    GetFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            Handler: lambda.handler
+            Runtime: python2.7
+            CodeUri: lambda.zip
+            Events:
+                RootResource:
+                    Type: Api
+                    Properties:
+                        Path: /
+                        Method: ANY
+                GetResource:
+                    Type: Api
+                    Properties:
+                        Path: /{proxy+}
+                        Method: ANY
