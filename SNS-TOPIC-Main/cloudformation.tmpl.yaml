@@ -32,6 +32,21 @@ Resources:
                     - Effect: Allow
                       Action: sns:Publish
                       Resource: !Ref Topic
+
+    LambdaRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    Effect: Allow
+                    Principal:
+                        Service: lambda.amazonaws.com
+                    Action: sts:AssumeRole
+            ManagedPolicyArns:
+                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+                - !Ref Policy
+
 Outputs:
     TopicARN:
         Value: !Ref Topic
@@ -41,3 +56,7 @@ Outputs:
         Value: !Ref Policy
         Export:
             Name: SNS-TOPIC-Main-POLICY
+    LambdaRoleARN:
+        Value: !GetAtt LambdaRole.Arn
+        Export:
+            Name: SNS-TOPIC-Main-ROLE-LAMBDA
