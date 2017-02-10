@@ -18,4 +18,4 @@ Outputs:
     RoleArn:
         Value: !GetAtt Role.Arn
         Export:
-            Name: ROLE-LAMBDA-Default
+            Name: !Sub '${AWS::StackName}'
