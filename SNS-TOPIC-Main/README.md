@@ -1,6 +1,6 @@
-# SNS-TOPIC-Main
+# Stack Name: `SNS-TOPIC-Main`
 
-### Exported stack's output values
+### Exported Values:
 
 | Name | Type |
 | ---- | ---- |
@@ -8,8 +8,10 @@
 | SNS-TOPIC-Main-POLICY | ARN of [AWS::IAM::ManagedPolicy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html) |
 | SNS-TOPIC-Main-ROLE-LAMBDA | ARN of [AWS::IAM::Role](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html) |
 
-### `data.json` example:
-```
+# Usage
+
+#### [data.json](data.json):
+```json
 {
 	"EndpointsSMS": [
 		"+33611223344"
