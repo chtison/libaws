@@ -9,7 +9,7 @@ Resources:
             CodeUri: lambda.zip
             Handler: lambda.handler
             Timeout: 10
-            Role: !GetAtt Role.Arn
+            Role: !ImportValue {{ .LambdaRole }}
             Environment:
                 Variables:
                     VERSION: '{{ .GolangVersion }}'
@@ -22,17 +22,3 @@ Resources:
                     Properties:
                         Schedule: {{ $e }}
 {{- end }}{{ end }}
-
-    Role:
-        Type: AWS::IAM::Role
-        Properties:
-            AssumeRolePolicyDocument:
-                Version: 2012-10-17
-                Statement:
-                    Effect: Allow
-                    Principal:
-                        Service: lambda.amazonaws.com
-                    Action: sts:AssumeRole
-            ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-                - !ImportValue {{ .PolicyPublishToTopic }}

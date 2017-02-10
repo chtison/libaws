@@ -4,7 +4,7 @@
 ```
 {
 	"Topic": "SNS-TOPIC-Main",
-	"PolicyPublishToTopic": "SNS-TOPIC-Main-POLICY",
+	"LambdaRole": "SNS-TOPIC-Main-ROLE-LAMBDA",
 	"GolangVersion": "go1.7.5",
 	"Schedules": [
 		"cron(0 10 * * ? *)",
@@ -14,9 +14,8 @@
 ```
 - **Topic**: (**required**)
 	* [Exported variable](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-exports.html) whose value must be an [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of an [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html).
-- **PolicyPublishToTopic**: (**required**)
-	* [Exported variable](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-exports.html) whose value must be an [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of an [AWS::SNS::ManagedPolicy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html).<br>
-	**PolicyPublishToTopic** must grant permission to publish to **Topic**.
+- **LambdaRole**: (**required**)
+	* [Exported variable](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-exports.html) whose value must be an [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of an [AWS::IAM::Role](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html).
 - **GolangVersion**: (**required**)
  	* Sets to the VERSION variable in the [function.py](function.py) environment.
 - **Schedules**: (**optional**)

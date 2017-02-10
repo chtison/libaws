@@ -1,6 +1,6 @@
 {
 	"Topic": "SNS-TOPIC-Main",
-	"PolicyPublishToTopic": "SNS-TOPIC-Main-POLICY",
+	"LambdaRole": "SNS-TOPIC-Main-ROLE-LAMBDA",
 	"Schedules": [
 		"cron(0 18 * * ? *)"
 	]

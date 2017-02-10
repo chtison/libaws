@@ -1,6 +1,6 @@
 {
 	"Topic": "SNS-TOPIC-Main",
-	"PolicyPublishToTopic": "SNS-TOPIC-Main-POLICY",
+	"LambdaRole": "SNS-TOPIC-Main-ROLE-LAMBDA",
 	"TorVersion": "0.2.9.9",
 	"Schedules": [
 		"cron(0 10 * * ? *)",
