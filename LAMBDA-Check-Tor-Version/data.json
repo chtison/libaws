@@ -1,9 +1,8 @@
 {
-	"Topic": "SNS-TOPIC-Main",
-	"LambdaRole": "SNS-TOPIC-Main-ROLE-LAMBDA",
+	"Topic": "!ImportValue SNS-TOPIC-Main",
+	"LambdaRole": "!ImportValue SNS-TOPIC-Main-ROLE-LAMBDA",
 	"TorVersion": "0.2.9.9",
 	"Schedules": [
-		"cron(0 10 * * ? *)",
-		"cron(0 20 * * ? *)"
+		"cron(0 18 * * ? *)"
 	]
 }

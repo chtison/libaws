@@ -1,9 +1,8 @@
 {
-	"Topic": "SNS-TOPIC-Main",
-	"LambdaRole": "SNS-TOPIC-Main-ROLE-LAMBDA",
+	"Topic": "!ImportValue SNS-TOPIC-Main",
+	"LambdaRole": "!ImportValue SNS-TOPIC-Main-ROLE-LAMBDA",
 	"GolangVersion": "go1.7.5",
 	"Schedules": [
-		"cron(0 10 * * ? *)",
-		"cron(0 20 * * ? *)"
+		"cron(0 18 * * ? *)"
 	]
 }

@@ -9,10 +9,10 @@ Resources:
             CodeUri: lambda.zip
             Handler: lambda.handler
             Timeout: 10
-            Role: !ImportValue {{ .LambdaRole }}
+            Role: {{ .LambdaRole }}
             Environment:
                 Variables:
-                    TOPIC: !ImportValue {{ .Topic }}
+                    TOPIC: {{ .Topic }}
 {{- with .Schedules }}
             Events:
 {{- range $i, $e := . }}

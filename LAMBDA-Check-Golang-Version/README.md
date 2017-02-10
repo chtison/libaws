@@ -1,22 +1,22 @@
-# LAMBDA-Check-Golang-Version
+# Stack Name: `LAMBDA-Check-Golang-Version`
 
-### data.json
+## Configuration
+
+### [data.json](data.json)
 ```
 {
-	"Topic": "SNS-TOPIC-Main",
-	"LambdaRole": "SNS-TOPIC-Main-ROLE-LAMBDA",
+	"Topic": "!ImportValue SNS-TOPIC-Main",
+	"LambdaRole": "!ImportValue SNS-TOPIC-Main-ROLE-LAMBDA",
 	"GolangVersion": "go1.7.5",
 	"Schedules": [
-		"cron(0 10 * * ? *)",
-		"cron(0 20 * * ? *)"
+		"cron(0 18 * * ? *)"
 	]
 }
 ```
-- **Topic**: (**required**)
-	* [Exported variable](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-exports.html) whose value must be an [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of an [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html).
-- **LambdaRole**: (**required**)
-	* [Exported variable](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-exports.html) whose value must be an [ARN](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of an [AWS::IAM::Role](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html).
-- **GolangVersion**: (**required**)
- 	* Sets to the VERSION variable in the [function.py](function.py) environment.
-- **Schedules**: (**optional**)
- 	* List of [schedule expressions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html).
+
+| Name | Type |
+| ---- | ---- |
+| Topic | **Required**. ARN of [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html) |
+| LambdaRole | **Required**. ARN of [AWS::IAM::Role](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html) |
+| GolangVersion | **Required**. Expected [latest Golang version](https://golang.org/dl/) |
+| Schedules | List of [schedule expressions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html) |
