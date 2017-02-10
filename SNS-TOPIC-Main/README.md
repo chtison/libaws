@@ -10,7 +10,7 @@
 
 # Usage
 
-#### [data.json](data.json):
+#### [data.json](data.json)
 ```json
 {
 	"EndpointsSMS": [
