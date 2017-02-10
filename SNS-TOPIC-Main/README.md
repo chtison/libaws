@@ -1,7 +1,7 @@
 # Stack Name: `SNS-TOPIC-Main`
 
 | Exported Variable Name | Type |
-| ---- | ---- |
+| ---------------------- | ---- |
 | SNS-TOPIC-Main | ARN of [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html) |
 | SNS-TOPIC-Main-POLICY | ARN of [AWS::IAM::ManagedPolicy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html) |
 | SNS-TOPIC-Main-ROLE-LAMBDA | ARN of [AWS::IAM::Role](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html) |
