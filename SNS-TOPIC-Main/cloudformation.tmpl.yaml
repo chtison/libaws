@@ -1,4 +1,5 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: 2010-09-09
+
 Resources:
     Topic:
         Type: AWS::SNS::Topic
@@ -51,12 +52,12 @@ Outputs:
     TopicARN:
         Value: !Ref Topic
         Export:
-            Name: SNS-TOPIC-Main
+            Name: !Sub '${AWS::StackName}'
     PolicyARN:
         Value: !Ref Policy
         Export:
-            Name: SNS-TOPIC-Main-POLICY
+            Name: !Sub '${AWS::StackName}-POLICY'
     LambdaRoleARN:
         Value: !GetAtt LambdaRole.Arn
         Export:
-            Name: SNS-TOPIC-Main-ROLE-LAMBDA
+            Name: !Sub '${AWS::StackName}-ROLE-LAMBDA'
