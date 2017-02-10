@@ -1,8 +1,6 @@
 # Stack Name: `SNS-TOPIC-Main`
 
-### Exported Values:
-
-| Name | Type |
+| Exported Variable Name | Type |
 | ---- | ---- |
 | SNS-TOPIC-Main | ARN of [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html) |
 | SNS-TOPIC-Main-POLICY | ARN of [AWS::IAM::ManagedPolicy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html) |
