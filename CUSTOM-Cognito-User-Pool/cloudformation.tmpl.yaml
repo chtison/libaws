@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
+
 Resources:
     Function:
         Type: AWS::Lambda::Function
@@ -25,7 +26,6 @@ Resources:
 
     Policy:
         Type: AWS::IAM::ManagedPolicy
-        DependsOn: Role
         Properties:
             PolicyDocument:
                 Version: 2012-10-17
@@ -43,4 +43,4 @@ Outputs:
     FunctionArn:
         Value: !GetAtt Function.Arn
         Export:
-            Name: CUSTOM-Cognito-User-Pool
+            Name: !Sub '${AWS::StackName}'

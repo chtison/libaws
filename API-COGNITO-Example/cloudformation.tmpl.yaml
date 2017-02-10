@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+    Function:
+        Type: AWS::Lambda::Function
+        Properties:
+            Runtime: python2.7
+            Handler: lambda.handler
+            Role: !ImportValue {{ .LambdaRole }}
+            Code: lambda.zip
+
+    Permission:
+        Type: AWS::Lambda::Permission
+        Properties:
+            Action: lambda:InvokeFunction
+            FunctionName: !GetAtt Function.Arn
+            Principal: apigateway.amazonaws.com
+
+    Api:
+        Type: AWS::ApiGateway::RestApi
+        Properties:
+            Body:
+                swagger: '2.0'
+                info:
+                    title: {{ .ApiTitle }}
+                    version: latest
+                paths:
+                    /:
+                        x-amazon-apigateway-any-method:
+                            x-amazon-apigateway-integration:
+                                type: aws_proxy
+                                httpMethod: POST
+                                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
+                                passthroughBehavior: when_no_match
+
+    Deployment:
+        Type: AWS::ApiGateway::Deployment
+        Properties:
+            RestApiId: !Ref Api
+            StageName: {{ .StageName }}
+
+Outputs:
+    ApiUrl:
+        Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/{{ .StageName }}'
+        Export:
+            Name: API-Test-Custom-Resource-URL

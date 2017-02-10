@@ -1,3 +1,3 @@
-STACK-NAME := API-Simple
+STACK-NAME := API-Example
 
 include ../misc/Lambda.mk

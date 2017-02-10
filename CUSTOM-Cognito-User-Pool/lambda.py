@@ -32,12 +32,13 @@ def decorator(f):
 def create(event, data):
 	if 'ResourceProperties' not in event:
 		event['ResourceProperties'] = {}
-	if 'ServiceToken' in event['ResourceProperties']:
-		del event['ResourceProperties']['ServiceToken']
-	if 'PoolName' not in event['ResourceProperties']:
-		event['ResourceProperties']['PoolName'] = data['StackId'].split('/')[1]+'-'+data['LogicalResourceId']
+	if 'Properties' not in event['ResourceProperties']:
+		event['ResourceProperties']['Properties'] = {}
+	properties = event['ResourceProperties']['Properties']
+	if 'PoolName' not in properties:
+		properties['PoolName'] = data['StackId'].split('/')[1]+'-'+data['LogicalResourceId']
 	try:
-		response = cognitoIDP.create_user_pool(**event['ResourceProperties'])
+		response = cognitoIDP.create_user_pool(**properties)
 		data['PhysicalResourceId'] = response['UserPool']['Id']
 	except Exception as e:
 		data['Status'] = 'FAILED'

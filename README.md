@@ -16,11 +16,20 @@ Authenticate to AWS:
 ```
 aws configure
 ```
-Deploy a stack:
+Go to a stack folder:
 ```sh
 cd <STACK-FOLDER>
-# Makefile usage
-make
+```
+Print available makefile commands:
+```
+make help
+```
+Deploy a stack:
+```sh
 # It is sometimes required to specify an S3 bucket (e.g., lambda functions)
 make deploy [S3-BUCKET=<BUCKET-NAME>]
+```
+Delete a stack:
+```
+make delete
 ```
