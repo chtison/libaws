@@ -29,3 +29,8 @@
 | ---- | ---- |
 | EndpointsSMS | List of telephone numbers in [E.164 format ](https://en.wikipedia.org/wiki/List_of_country_calling_codes) |
 | EndpointsEmail | List of emails |
+
+#### Deploy to aws
+```
+make deploy
+```
