@@ -42,33 +42,20 @@ def create(event, data):
 		event['ResourceProperties']['Properties'] = {}
 	properties = event['ResourceProperties']['Properties']
 	if not checkType(properties, dict, data, ''): return
-	if not normalizeParameter(['Policies', 'PasswordPolicy', 'MinimumLength'], int, properties, data): return
-	b = Bool()
-	if not normalizeParameter(['Policies', 'PasswordPolicy', 'RequireUppercase'], b, properties, data): return
-	if not normalizeParameter(['Policies', 'PasswordPolicy', 'RequireLowercase'], b, properties, data): return
-	if not normalizeParameter(['Policies', 'PasswordPolicy', 'RequireNumbers'], b, properties, data): return
-	if not normalizeParameter(['Policies', 'PasswordPolicy', 'RequireSymbols'], b, properties, data): return
-	if not normalizeParameter(['DeviceConfiguration', 'ChallengeRequiredOnNewDevice'], b, properties, data): return
-	if not normalizeParameter(['DeviceConfiguration', 'DeviceOnlyRememberedOnUserPrompt'], b, properties, data): return
-	if not normalizeParameter(['AdminCreateUserConfig', 'AllowAdminCreateUserOnly'], b, properties, data): return
-	if not normalizeParameter(['AdminCreateUserConfig', 'UnusedAccountValidityDays'], int, properties, data): return
-	if 'Schema' in properties:
-		if not checkType(properties['Schema'], list, data, '.Schema'): return
-		for i, e in enumerate(properties['Schema']):
-			keyPath = '.Schema[{}]'.format(i)
-			if not checkType(e, dict, data, keyPath): return
-			if not normalizeParameter(['DeveloperOnlyAttribute'], b, e, data, keyPath): return
-			if not normalizeParameter(['Mutable'], b, e, data, keyPath): return
-			if not normalizeParameter(['Required'], b, e, data, keyPath): return
-	if 'PoolName' not in properties:
-		properties['PoolName'] = data['LogicalResourceId']
+	if not normalizeParameter(['GenerateSecret'], Bool(), properties, data): return
+	if not normalizeParameter(['RefreshTokenValidity'], int, properties, data): return
 	try:
-		response = cognitoIDP.create_user_pool(**properties)
-		data['PhysicalResourceId'] = response['UserPool']['Id']
-		print 'CREATE_USER_POOL:'
-		print json.dumps(response['UserPool'], default=str)
+		response = cognitoIDP.create_user_pool_client(**properties)
+		data['PhysicalResourceId'] = response['UserPoolClient']['ClientId']
+		if 'ClientSecret' in response['UserPoolClient']:
+			data['Data'] = {
+				'ClientSecret': response['UserPoolClient']['ClientSecret'],
+			}
+		print 'CREATE_USER_POOL_CLIENT:'
+		print json.dumps(response['UserPoolClient'], default=str)
 	except Exception as e:
 		data['Status'] = 'FAILED'
+		print str(e)
 		data['Reason'] = str(e)
 		return
 	return
@@ -110,8 +97,9 @@ def delete(event, data):
 	if event['PhysicalResourceId'] == 'X':
 		return
 	try:
-		cognitoIDP.delete_user_pool(
-			UserPoolId=event['PhysicalResourceId'],
+		cognitoIDP.delete_user_pool_client(
+			UserPoolId=event['ResourceProperties']['Properties']['UserPoolId'],
+			ClientId=event['PhysicalResourceId'],
 		)
 	except Exception as e:
 		print str(e)
