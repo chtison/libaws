@@ -2,6 +2,7 @@ define USAGE
 usage: make COMMAND
 make template          # execute template on $(MAIN_TMPL) with $(DATA_TMPL)
 make validate          # validate the template
+make pytest            # run python tests
 make zip               # create the zip to be uploaded to S3 in a lambda stack
 make package           # upload the zip to S3 in a lambda stack
 make deploy            # deploy stack named $(STACK-NAME) to your aws account
@@ -9,7 +10,7 @@ make delete            # delete stack named $(STACK-NAME) from your aws account
 make clean             # remove local temporary files
 endef
 
-.PHONY: zip package
+.PHONY: pytest zip package
 
 PWD := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
@@ -24,6 +25,10 @@ OBJ_ZIP        ?= lambda.zip
 OBJ_PACKAGE    ?= cloudformation.package.yaml
 
 DEPLOY_FILE    := $(OBJ_DIR)/$(OBJ_PACKAGE)
+
+pytest:
+	-python -m unittest discover -v -p \*_test.py
+	rm -f -- *.pyc
 
 $(OBJ_DIR)/$(OBJ_ZIP): $(OBJ_PY_MODULES)
 
