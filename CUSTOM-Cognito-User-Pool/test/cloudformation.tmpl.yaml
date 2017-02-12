@@ -36,4 +36,4 @@ Outputs:
     UserPoolId:
         Value: !Ref UserPool
     UserPoolArn:
-        Value: !Sub 'arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}'
+        Value: !GetAtt UserPool.Arn

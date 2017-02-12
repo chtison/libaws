@@ -65,6 +65,10 @@ def create(event, data):
 	try:
 		response = cognitoIDP.create_user_pool(**properties)
 		data['PhysicalResourceId'] = response['UserPool']['Id']
+		regionAndAccId = ':'.join(event['StackId'].split(':')[3:5])
+		data['Data'] = {
+			'Arn': 'arn:aws:cognito-idp:'+regionAndAccId+':userpool/'+data['PhysicalResourceId'],
+		}
 		print 'CREATE_USER_POOL:'
 		print json.dumps(response['UserPool'], default=str)
 	except Exception as e:
@@ -103,6 +107,8 @@ def normalizeParameter(keys, fn, properties, data, keyPath=None):
 
 @decorator
 def update(event, data):
+	data['Status'] = 'FAILED'
+	data['Reason'] = 'Update not implemented.'
 	return
 
 @decorator
