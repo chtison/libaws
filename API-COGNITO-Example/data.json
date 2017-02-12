@@ -1,0 +1,8 @@
+{
+	"LambdaRole": "!ImportValue ROLE-LAMBDA-Default",
+	"ApiTitle": "API-COGNITO-Example",
+	"StageName": "api",
+	"UserPoolName": "API-COGNITO-Example",
+	"ServiceTokenUserPool": "!ImportValue CUSTOM-Cognito-User-Pool",
+	"ServiceTokenUserPoolClient": "!ImportValue CUSTOM-Cognito-User-Pool-Client"
+}

@@ -31,14 +31,12 @@ Resources:
                                 type: aws_proxy
                                 httpMethod: POST
                                 uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
-                                passthroughBehavior: when_no_match
                     /{proxy+}:
                         x-amazon-apigateway-any-method:
                             x-amazon-apigateway-integration:
                                 type: aws_proxy
                                 httpMethod: POST
                                 uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
-                                passthroughBehavior: when_no_match
 
     Deployment:
         Type: AWS::ApiGateway::Deployment
