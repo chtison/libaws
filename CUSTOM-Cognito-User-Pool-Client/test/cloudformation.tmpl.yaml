@@ -39,7 +39,7 @@ Resources:
             Properties:
                 UserPoolId: !Ref UserPool
                 ClientName: MyClient
-                GenerateSecret: false
+                GenerateSecret: true
                 RefreshTokenValidity: 7
                 ReadAttributes:
                     - email
@@ -48,3 +48,5 @@ Resources:
 Outputs:
     UserPoolClientId:
         Value: !Ref UserPoolClient
+    UserPoolClientSecret:
+        Value: !GetAtt UserPoolClient.ClientSecret

@@ -90,6 +90,8 @@ def normalizeParameter(keys, fn, properties, data, keyPath=None):
 
 @decorator
 def update(event, data):
+	data['Status'] = 'FAILED'
+	data['Reason'] = 'Update not implemented.'
 	return
 
 @decorator
