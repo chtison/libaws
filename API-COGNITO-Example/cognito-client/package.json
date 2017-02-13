@@ -1,0 +1,6 @@
+{
+	"private": true,
+	"dependencies": {
+		"amazon-cognito-identity-js": "^1.13.0"
+	}
+}
