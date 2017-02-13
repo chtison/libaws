@@ -12,7 +12,7 @@ make build
 make run USER_POOL_ID=<> CLIENT_ID=<> EMAIL=<> PASSWORD=<>
 ```
 ##### Run step by step
-Fill [userPoolId](src/main.ts#L7) and [clientId](src/main.ts#L*), then:
+Fill [userPoolId](src/main.ts#L7) and [clientId](src/main.ts#L8), then:
 ```
 node dist/main.js usage
 node dist/main.js signUp EMAIL PASSWORD

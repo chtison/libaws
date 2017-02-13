@@ -92,12 +92,11 @@ Resources:
                 ReadAttributes:
                     - email
                     - email_verified
-                # REMOVE NEXT LINE IN PROD
-                ExplicitAuthFlows:
-                    - ADMIN_NO_SRP_AUTH
 
 Outputs:
+    UserPoolId:
+        Value: !Ref UserPool
+    UserPoolClientId:
+        Value: !Ref UserPoolClient
     ApiUrl:
         Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/{{ .StageName }}'
-        Export:
-            Name: API-Test-Custom-Resource-URL
