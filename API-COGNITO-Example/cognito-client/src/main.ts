@@ -25,7 +25,7 @@ function getUsername(email: string) : string {
 	return email.replace('@', '-at-').replace('.', '-dot-')
 }
 
-function getUser(userPool: CognitoUserPool, userName?: string) : CognitoUser {
+function getUser(userPool: CognitoUserPool, userName: string) : CognitoUser {
 	return new CognitoUser({
 		Pool    : userPool,
 		Username: userName,
@@ -39,7 +39,7 @@ function getAuthenticationDetails(userName: string, password: string) : Authenti
 	})
 }
 
-function callback(err, result) {
+function callback(err: any, result: any) {
 	if (err) {
 		log(err)
 		return
@@ -56,7 +56,7 @@ function signUp(email: string, password: string) {
 		}),
 	]
 	const userName = getUsername(email)
-	userPool.signUp(userName, password, attrs, null, callback)
+	userPool.signUp(userName, password, attrs, [], callback)
 }
 
 function confirmRegistration(email: string, confirmationCode: string) {
@@ -89,12 +89,17 @@ function signIn(email: string, password: string) {
 		},
 		newPasswordRequired: function (userAttributes: any, requiredAttributes: any) {
 			console.log('authenticateUser:newPasswordRequired')
+			log(userAttributes)
+			log(requiredAttributes)
 		},
 		mfaRequired: function (challengeName: any, challengeParameters: any) {
 			console.log('authenticateUser:mfaRequired')
+			log(challengeName)
+			log(challengeParameters)
 		},
 		customChallenge: function (challengeParameters: any) {
 			console.log('authenticateUser:customChallenge')
+			log(challengeParameters)
 		},
 	})
 }
