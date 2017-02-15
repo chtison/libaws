@@ -9,15 +9,26 @@ Resources:
             Role: {{ .LambdaRole }}
             Code: lambda.zip
 
-    Permission:
+    PermissionApiGateway:
         Type: AWS::Lambda::Permission
+        DependsOn: Function
         Properties:
             Action: lambda:InvokeFunction
             FunctionName: !GetAtt Function.Arn
             Principal: apigateway.amazonaws.com
 
+    PermissionCognito:
+        Type: AWS::Lambda::Permission
+        DependsOn: [Function, UserPool]
+        Properties:
+            Action: lambda:InvokeFunction
+            FunctionName: !GetAtt Function.Arn
+            Principal: cognito-idp.amazonaws.com
+            SourceArn: !GetAtt UserPool.Arn
+
     Api:
         Type: AWS::ApiGateway::RestApi
+        DependsOn: Function
         Properties:
             Body:
                 swagger: '2.0'
@@ -45,12 +56,14 @@ Resources:
 
     Deployment:
         Type: AWS::ApiGateway::Deployment
+        DependsOn: Api
         Properties:
             RestApiId: !Ref Api
             StageName: {{ .StageName }}
 
     UserPool:
         Type: Custom::COGNITO-UserPool
+        DependsOn: Function
         Properties:
             ServiceToken: {{ .ServiceTokenUserPool }}
             Properties:
@@ -79,9 +92,12 @@ Resources:
                       StringAttributeConstraints:
                           MinLength: 5
                           MaxLength: 2048
+                LambdaConfig:
+                    PostConfirmation: !GetAtt Function.Arn
 
     UserPoolClient:
         Type: Custom::COGNITO-UserPoolClient
+        DependsOn: UserPool
         Properties:
             ServiceToken: {{ .ServiceTokenUserPoolClient }}
             Properties:
