@@ -10,7 +10,7 @@ LibAWS is a collection of AWS cloudformation stacks.
 ### Usage
 Launch the docker environment dedicated to this project:
 ```
-make
+make run
 ```
 Authenticate to AWS:
 ```
@@ -27,7 +27,7 @@ make help
 Deploy a stack:
 ```sh
 # It is sometimes required to specify an S3 bucket (e.g., lambda functions)
-make deploy [S3-BUCKET=<BUCKET-NAME>]
+make deploy [S3_BUCKET=<BUCKET-NAME>]
 ```
 Delete a stack:
 ```
