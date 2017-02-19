@@ -1,5 +1,5 @@
-STACK-NAME := LAMBDA-Check-Golang-Version
-PY_MODULES := bs4
-ZIP_ARGS   := -x bs4/tests/\*
-
-include ../misc/Lambda.mk
+STACK_NAME       := LAMBDA-Check-Golang-Version
+TEMPLATE         := ../TEMPLATE-LAMBDA-Publish-SNS/cloudformation.yaml
+DATA_JSON        := data.json
+LAMBDA_FUNCTIONS := lambda
+include ../misc/Cloudformation.mk

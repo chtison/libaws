@@ -1,7 +1,10 @@
 {
-	"Topic": "!ImportValue SNS-TOPIC-Main",
-	"LambdaRole": "!ImportValue SNS-TOPIC-Main-ROLE-LAMBDA",
-	"TorVersion": "0.2.9.9",
+	"Topic": "!ImportValue SNS-TOPIC",
+	"LogGroupRetentionInDays": 7,
+	"Timeout": 10,
+	"Environment": [
+		["TORVERSION", "0.2.9.9"]
+	],
 	"Schedules": [
 		"cron(0 18 * * ? *)"
 	]

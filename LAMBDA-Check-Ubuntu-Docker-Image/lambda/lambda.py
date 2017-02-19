@@ -3,15 +3,13 @@ from urllib2 import urlopen
 from bs4 import BeautifulSoup
 
 TOPIC = os.environ['TOPIC']
-VERSION = os.environ['VERSION']
 
 sns = boto3.client('sns')
 
 def handler(event, context):
-	html = urlopen('https://golang.org/dl/').read()
+	html = urlopen('https://hub.docker.com/r/library/ubuntu/tags/').read()
 	soup = BeautifulSoup(html, 'html.parser')
-	version = soup.select('#stable + div')[0]['id']
-	if version != VERSION:
-		msg = 'Golang: New version detected: {}'.format(version)
+	if 'hours' in soup.find(string='latest').next_element.next_element.next_element.text:
+		msg = 'Docker library/ubuntu: New version detected'
 		print msg
 		sns.publish(TopicArn=TOPIC, Subject=msg, Message=msg)

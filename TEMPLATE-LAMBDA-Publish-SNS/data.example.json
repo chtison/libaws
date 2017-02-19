@@ -1,11 +1,12 @@
 {
 	"Topic": "!ImportValue SNS-TOPIC",
 	"LogGroupRetentionInDays": 7,
-	"Timeout": 10,
 	"Environment": [
-		["GOVERSION", "go1.8"]
+		["NAME1", "VALUE1"],
+		["NAME2", "VALUE2"]
 	],
 	"Schedules": [
-		"cron(0 18 * * ? *)"
+		"cron(0 18 * * ? *)",
+		"rate(2 minutes)"
 	]
 }

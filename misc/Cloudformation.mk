@@ -8,7 +8,7 @@ TEMPLATE              ?= cloudformation.yaml
 DATA_JSON             ?= # data.json # empty to remove tmpl preprocessing
 OBJ_DIR               ?= obj
 DEPLOY_ARGS           ?= --capabilities CAPABILITY_IAM
-OBJ_TEMPLATE          := $(OBJ_DIR)/$(TEMPLATE)
+OBJ_TEMPLATE          ?= $(OBJ_DIR)/cloudformation.yaml
 OBJ_LAMBDA_ZIP        := $(addprefix $(OBJ_DIR)/, $(addsuffix .zip, $(LAMBDA_FUNCTIONS)))
 ifneq "$(LAMBDA_FUNCTIONS)$(INCLUDED_TEMPLATES)" ""
 OBJ_PACKAGED_TEMPLATE ?= $(OBJ_DIR)/cloudformation.packaged.yaml
