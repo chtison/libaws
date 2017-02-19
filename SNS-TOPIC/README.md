@@ -1,12 +1,15 @@
 # Default Stack Name: `SNS-TOPIC`
 
-| Exported Variable Name | Type |
+## Exported variables
+
+|  Name | Type |
 | ---------------------- | ---- |
-| **${**AWS::StackName**}** | ARN of [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html) |
+| *${AWS::StackName}* | ARN of [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html) |
 
 ## Configuration
 
 ### [data.json](data.json)
+
 ```json
 {
 	"Subscriptions": [

@@ -1,6 +1,8 @@
 # `TEMPLATE-LAMBDA-Publish-SNS`
 
-### Configuration
+## Configuration
+
+### [data.json](data.json)
 
 ```json
 {
@@ -21,7 +23,7 @@
 | Name | Type |
 | ---- | ---- |
 | Topic | **Required**. ARN of [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html). |
-| LogGroupRetentionInDays | Number in days of log retention. |
-| Timeout | Number in minutes of lambda's timeout. |
+| LogGroupRetentionInDays | Number of days for log retention. |
+| Timeout | Number of minutes for lambda's timeout. |
 | Environment | List of ["KEY", "VALUE"] for lambda environment. |
-| Schedules | List of [schedule expressions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html) |
+| Schedules | List of [schedule expressions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html). |
