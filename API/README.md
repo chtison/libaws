@@ -9,7 +9,7 @@
 ## Configuration
 
 ### [data.yaml](data.yaml)
-```
+```yaml
 StageName: api
 Lambda:
     Permissions:
