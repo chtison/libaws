@@ -2,23 +2,22 @@
 
 ## Exported variables
 
-|  Name | Type |
+|  Name                  | Type |
 | ---------------------- | ---- |
-| *${AWS::StackName}* | ARN of [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html) |
+| *${AWS::StackName}*    | ARN of [AWS::SNS::Topic](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html) |
 
 ## Configuration
 
-### [data.json](data.json)
+### [data.yaml](data.yaml)
 
-```json
-{
-	"Subscriptions": [
-		["email", "email@example.org"],
-		["email-json", "email@example.com"]
-	]
-}
+```yaml
+Subscriptions:
+    - - email-json
+      - "example@example.org"
+    - - email
+      - "example@example.com"
 ```
 
-| Name | Type |
-| ---- | ---- |
-| Subscriptions | List of [[Endpoint, Protocol]](https://docs.aws.amazon.com/sns/latest/api/API_Subscribe.html) |
+| Name          | Type |
+| ------------- | ---- |
+| Subscriptions | List of [[Endpoint, Protocol]]}(https://docs.aws.amazon.com/sns/latest/api/API_Subscribe.html) |

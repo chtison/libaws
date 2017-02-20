@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+    UserPool:
+        Type: Custom::COGNITO-UserPool
+        Properties:
+            ServiceToken: {{ .ServiceToken_CognitoUserPool }}
+            Properties:
+                PoolName: MyPool
+                Policies:
+                    PasswordPolicy:
+                        MinimumLength: 10
+                        RequireLowercase: false
+                        RequireNumbers: false
+                        RequireSymbols: false
+                        RequireUppercase: false
+                AutoVerifiedAttributes: [email]
+                AliasAttributes: [email]
+                MfaConfiguration: 'OFF'
+                UserPoolTags:
+                    TagName: TagValue
+                AdminCreateUserConfig:
+                    AllowAdminCreateUserOnly: false
+                    UnusedAccountValidityDays: 7
+                Schema:
+                    - Name: email
+                      AttributeDataType: String
+                      DeveloperOnlyAttribute: false
+                      Mutable: true
+                      Required: true
+                      StringAttributeConstraints:
+                          MinLength: 5
+                          MaxLength: 2048
+
+Outputs:
+    UserPoolId:
+        Value: !Ref UserPool
+    UserPoolArn:
+        Value: !GetAtt UserPool.Arn

@@ -2,13 +2,11 @@
 
 ## Configuration
 
-### [data.json](data.json)
-```
-{
-	"ServiceToken": "!ImportValue CUSTOM-Cognito-User-Pool"
-}
+### [data.yaml](data.yaml)
+```yaml
+ServiceToken_CognitoUserPool: "!ImportValue CUSTOM-Cognito-User-Pool"
 ```
 
 | Name | Type |
 | ---- | ---- |
-| ServiceToken | **Required**. ARN of [AWS::Lambda::Function](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html) |
+| ServiceToken_CognitoUserPool | **Required**. ARN of [AWS::Lambda::Function](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html) |

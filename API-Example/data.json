@@ -1,5 +1,0 @@
-{
-	"LambdaRole": "!ImportValue ROLE-LAMBDA-Default",
-	"ApiTitle": "API-Example",
-	"StageName": "api"
-}

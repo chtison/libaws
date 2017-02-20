@@ -1,0 +1,4 @@
+StageName: api
+Lambda:
+    Permissions:
+        - Principal: apigateway.amazonaws.com

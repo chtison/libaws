@@ -1,0 +1,62 @@
+# `TEMPLATE-LAMBDA`
+
+This is not a stack.
+
+## Configuration
+
+### [data.example.yaml](data.example.yaml)
+
+```yaml
+DefaultName: Default
+FunctionName: MyFunctionName
+# RoleName: MyRoleName
+# LogGroupName: MyLogGroupName
+# PolicyName: MyPolicyName
+# PermissionName: MyPermissionName
+# EventName: MyEventName
+
+Runtime: nodejs
+Handler: handler.handler
+Zip: mylambda.zip
+
+LogGroupRetentionInDays: 7
+Timeout: 10
+
+Environment:
+    KEY: VALUE
+    HELLO: WORLD
+
+Policies:
+    - Effect: Allow
+      Action:
+          - sns:Publish
+      Resource: "!ImportValue SNS-TOPIC"
+
+Permissions:
+    - Action: lambda:Invoke*
+      Principal: s3.amazonaws.com
+      SourceAccount: "!Sub '${AWS::AccountId}'"
+      SourceArn: "!Ref Bucket"
+    - Principal: apigateway.amazonaws.com
+
+Schedules:
+    - 'cron(0 18 * * ? *)'
+    - 'rate(2 minutes)'
+
+Outputs:
+    Hello:
+        Value: World
+    FunctionArn:
+        Value: "!GetAtt MyFunctionName.Arn"
+        ExportName: "!Sub '${AWS::StackName}'"
+```
+
+| Name                    | Type                                  |
+| ----------------------- | ------------------------------------- |
+| DefaultName             | Default name used for resources.      |
+| LogGroupRetentionInDays | Number of days for log retention.     |
+| Timeout                 | Number of minutes for lambda timeout. |
+| Environment             | Lambda environment dictionary.        |
+| Policies                | List of [policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html). |
+| Schedules               | List of [schedule expressions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html). |
+| Outputs                 | Template outputs dictionary.          |

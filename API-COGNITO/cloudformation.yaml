@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+    #
+    ## Lambda Functions
+    #
+    {{- template "lambda.yaml" dictInterfaceToInterface .Lambda.Index "Include" true }}
+
+    {{- template "lambda.yaml" dictInterfaceToInterface .Lambda.CognitoPostConfirmation "Include" true }}
+
+    #
+    ## Rest API
+    #
+    API:
+        Type: AWS::ApiGateway::RestApi
+        DependsOn:
+            - FunctionIndex
+        Properties:
+            Body:
+                swagger: '2.0'
+                info:
+                    title: !Sub '${AWS::StackName}'
+                    version: latest
+                securityDefinitions:
+                    {{ .CognitoUserPoolName }}:
+                        type: apiKey
+                        name: Authorization
+                        in: header
+                        x-amazon-apigateway-authtype: cognito_user_pools
+                        x-amazon-apigateway-authorizer:
+                            providerARNs:
+                                - !GetAtt CognitoUserPool.Arn
+                            type: cognito_user_pools
+                paths:
+                    /:
+                        x-amazon-apigateway-any-method:
+                            security: [{{ .CognitoUserPoolName }}: []]
+                            x-amazon-apigateway-integration:
+                                type: aws_proxy
+                                httpMethod: POST
+                                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionIndex.Arn}/invocations'
+
+    Deployment:
+        Type: AWS::ApiGateway::Deployment
+        DependsOn: API
+        Properties:
+            RestApiId: !Ref API
+            StageName: {{ .StageName }}
+
+    #
+    ## Cognito User Pool & User Pool Client
+    #
+    CognitoUserPool:
+        Type: AWS::CloudFormation::CustomResource
+        DependsOn: FunctionCognitoPostConfirmation
+        Properties:
+            ServiceToken: {{ .ServiceToken_CognitoUserPool }}
+            Properties:
+                PoolName: {{ .CognitoUserPoolName }}
+                Policies:
+                    PasswordPolicy:
+                        MinimumLength: 6
+                        RequireUppercase: false
+                        RequireLowercase: false
+                        RequireNumbers: false
+                        RequireSymbols: false
+                LambdaConfig:
+                    PostConfirmation: !GetAtt FunctionCognitoPostConfirmation.Arn
+                AutoVerifiedAttributes: [email]
+                AliasAttributes: [email]
+                Schema:
+                    - Name: email
+                      AttributeDataType: String
+                      DeveloperOnlyAttribute: false
+                      Mutable: true
+                      Required: true
+                      StringAttributeConstraints:
+                          MinLength: 3
+
+    CognitoUserPoolClient:
+        Type: AWS::CloudFormation::CustomResource
+        DependsOn: CognitoUserPool
+        Properties:
+            ServiceToken: {{ .ServiceToken_CognitoUserPoolClient }}
+            Properties:
+                UserPoolId: !Ref CognitoUserPool
+                ClientName: Client
+                ReadAttributes:
+                    - email
+                    - email_verified
+
+    #
+    ## DynamoDB Users Table
+    #
+    # DynamoTableUsers:
+    #     Type: AWS::DynamoDB::Table
+    #     Properties:
+    #         ProvisionedThroughput:
+    #             ReadCapacityUnits: 3
+    #             WriteCapacityUnits: 3
+    #         AttributeDefinitions:
+    #             - AttributeName: UserSubject
+    #               AttributeType: S
+    #         KeySchema:
+    #             - AttributeName: UserSubject
+    #               KeyType: HASH
+
+Outputs:
+    ApiUrl:
+        Value: !Sub 'https://${API}.execute-api.${AWS::Region}.amazonaws.com/{{ .StageName }}'
+    CognitoUserPoolId:
+        Value: !Ref CognitoUserPool
+    CognitoUserPoolClientId:
+        Value: !Ref CognitoUserPoolClient
+    CLI:
+        Value: !Sub 'make run USER_POOL_ID=${CognitoUserPool} CLIENT_ID=${CognitoUserPoolClient} PASSWORD=test1234 EMAIL=YOUR-EMAIL'

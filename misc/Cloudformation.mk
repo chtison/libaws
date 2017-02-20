@@ -5,7 +5,7 @@ LAMBDA_DIR            ?= .
 LAMBDA_FUNCTIONS      ?=
 INCLUDED_TEMPLATES    ?=
 TEMPLATE              ?= cloudformation.yaml
-DATA_JSON             ?= # data.json # empty to remove tmpl preprocessing
+DATA_YAML             ?=
 OBJ_DIR               ?= obj
 DEPLOY_ARGS           ?= --capabilities CAPABILITY_IAM
 OBJ_TEMPLATE          ?= $(OBJ_DIR)/cloudformation.yaml
@@ -16,7 +16,7 @@ endif
 
 .PHONY: default clean template validate deploy delete
 
-default: deploy
+default: deploy clean
 
 $(OBJ_DIR):
 	mkdir -p $@
@@ -29,9 +29,9 @@ ifdef LAMBDA_FUNCTIONS
 	done
 endif
 
-$(OBJ_TEMPLATE): $(OBJ_DIR) $(TEMPLATE) $(DATA_JSON)
-ifdef DATA_JSON
-	tmpl $(TEMPLATE) $(DATA_JSON) $@
+$(OBJ_TEMPLATE): $(OBJ_DIR) $(TEMPLATE) $(DATA_YAML)
+ifdef DATA_YAML
+	tmpl $@ $(DATA_YAML) $(TEMPLATE)
 else
 	cp -fT -- $(TEMPLATE) $@
 endif

@@ -1,8 +1,0 @@
-{
-	"Topic": "!ImportValue SNS-TOPIC",
-	"LogGroupRetentionInDays": 7,
-	"Timeout": 10,
-	"Schedules": [
-		"cron(0 18 * * ? *)"
-	]
-}

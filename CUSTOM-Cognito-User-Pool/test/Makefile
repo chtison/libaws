@@ -1,3 +1,3 @@
-STACK-NAME := TEST-CUSTOM-Cognito-User-Pool
-
-include ../../misc/Generic.mk
+STACK_NAME := TEST-CUSTOM-Cognito-User-Pool
+DATA_YAML  := data.yaml
+include ../../misc/Cloudformation.mk

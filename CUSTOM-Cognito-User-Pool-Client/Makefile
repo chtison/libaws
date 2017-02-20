@@ -1,4 +1,5 @@
-STACK-NAME := CUSTOM-Cognito-User-Pool-Client
-PY_MODULES := requests
-
-include ../misc/Lambda.mk
+STACK_NAME       := CUSTOM-Cognito-User-Pool-Client
+TEMPLATE         := ../TEMPLATE-LAMBDA/lambda.yaml
+DATA_YAML        := data.yaml
+LAMBDA_FUNCTIONS := lambda
+include ../misc/Cloudformation.mk

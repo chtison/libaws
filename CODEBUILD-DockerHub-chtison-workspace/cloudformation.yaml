@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+    Project:
+        Type: AWS::CodeBuild::Project
+        DependsOn: Role
+        Properties:
+            Name: !Sub '${AWS::StackName}'
+            ServiceRole: !GetAtt Role.Arn
+            TimeoutInMinutes: 15
+            Environment:
+                Type: LINUX_CONTAINER
+                ComputeType: BUILD_GENERAL1_SMALL
+                Image: aws/codebuild/docker:1.12.1
+            Artifacts:
+                Type: NO_ARTIFACTS
+            Source:
+                Type: GITHUB
+                Location: https://github.com/chtison/workspace.git
+                BuildSpec: |-
+                    version: 0.1
+                    phases:
+                        pre_build:
+                            commands:
+                                - docker login -u '{{.DockerHubUsername}}' -p '{{.DockerHubPassword}}'
+                        build:
+                            commands:
+                                - make build
+                        post_build:
+                            commands:
+                                - make push
+
+    Role:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    Effect: Allow
+                    Principal:
+                        Service: codebuild.amazonaws.com
+                    Action: sts:AssumeRole
+
+    LogGroup:
+        Type: AWS::Logs::LogGroup
+        DependsOn: Project
+        Properties:
+            LogGroupName: !Sub '/aws/lambda/${Project}'
+
+    Policy:
+        Type: AWS::IAM::Policy
+        DependsOn: [Role, LogGroup]
+        Properties:
+            PolicyName: Default
+            Roles: [!Ref Role]
+            PolicyDocument:
+                Version: 2012-10-17
+                Statement:
+                    - Effect: Allow
+                      Action:
+                          - logs:CreateLogStream
+                          - logs:PutLogEvents
+                      Resource: !GetAtt LogGroup.Arn
+
+Outputs:
+    ProjectName:
+        Value: !Sub '${AWS::StackName}'
+        Export:
+            Name: !Sub '${AWS::StackName}'

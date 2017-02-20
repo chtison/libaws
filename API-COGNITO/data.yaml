@@ -1,0 +1,20 @@
+ServiceToken_CognitoUserPool: "!ImportValue CUSTOM-Cognito-User-Pool"
+ServiceToken_CognitoUserPoolClient: "!ImportValue CUSTOM-Cognito-User-Pool-Client"
+
+CognitoUserPoolName: API-COGNITO
+StageName: api
+
+Lambda:
+    Index:
+        DefaultName: Index
+        Zip: index.zip
+        Permissions:
+            - Principal: apigateway.amazonaws.com
+
+    CognitoPostConfirmation:
+        DefaultName: CognitoPostConfirmation
+        Zip: Cognito.PostConfirmation.zip
+        Permissions:
+            - Principal: cognito-idp.amazonaws.com
+              SourceAccount: "!Ref AWS::AccountId"
+              SourceArn: "!GetAtt CognitoUserPool.Arn"

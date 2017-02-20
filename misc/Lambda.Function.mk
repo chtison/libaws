@@ -8,7 +8,7 @@ OBJ_LAMBDA_FILE    := $(OBJ_DIR)/$(LAMBDA_FILE)
 OBJ_LAMBDA_MODULES := $(addprefix $(OBJ_DIR)/, $(LAMBDA_MODULES))
 OBJ_ZIP            := $(OBJ_DIR)/$(ZIP_NAME)
 
-.PHONY: default clean pytest zip
+.PHONY: default clean test zip
 
 default: zip
 
@@ -18,7 +18,9 @@ $(OBJ_DIR):
 clean:
 	rm -rf -- $(OBJ_DIR)
 
-pytest:
+test:
+	if [ -f requirements.txt ] ; then pip install -r requirements.txt ; fi
+	if [ -f requirements_test.txt ] ; then pip install -r requirements_test.txt ; fi
 	-python -m unittest discover -v -p \*_test.py
 	rm -f -- *.pyc
 

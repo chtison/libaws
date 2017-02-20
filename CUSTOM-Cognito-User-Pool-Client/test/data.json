@@ -1,4 +1,0 @@
-{
-	"UserPool": "!ImportValue CUSTOM-Cognito-User-Pool",
-	"UserPoolClient": "!ImportValue CUSTOM-Cognito-User-Pool-Client"
-}

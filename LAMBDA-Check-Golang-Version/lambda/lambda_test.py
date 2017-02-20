@@ -1,9 +1,9 @@
-import json, os, unittest
+import yaml, os, unittest
 
-with open('data.json') as f:
-	data = json.load(f)
+with open('../data.yaml') as f:
+	data = yaml.load(f)
 os.environ['TOPIC'] = 'X'
-os.environ['VERSION'] = data['GolangVersion']
+os.environ['GOVERSION'] = data['Environment']['GOVERSION']
 execfile('lambda.py')
 
 class TestLambdaFunction(unittest.TestCase):

@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+
+    {{- template "lambda.yaml" dictInterfaceToInterface .Lambda "Include" true }}
+
+    Api:
+        Type: AWS::ApiGateway::RestApi
+        Properties:
+            Body:
+                swagger: '2.0'
+                info:
+                    title: {{ .ApiTitle }}
+                    version: latest
+                paths:
+                    /:
+                        x-amazon-apigateway-any-method:
+                            x-amazon-apigateway-integration:
+                                type: aws_proxy
+                                httpMethod: POST
+                                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
+                    /{proxy+}:
+                        x-amazon-apigateway-any-method:
+                            x-amazon-apigateway-integration:
+                                type: aws_proxy
+                                httpMethod: POST
+                                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Function.Arn}/invocations'
+
+    Deployment:
+        Type: AWS::ApiGateway::Deployment
+        Properties:
+            RestApiId: !Ref Api
+            StageName: {{ .StageName }}
+
+Outputs:
+    ApiUrl:
+        Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.amazonaws.com/{{ .StageName }}'
+        Export:
+            Name: !Sub '${AWS::StackName}-URL'
