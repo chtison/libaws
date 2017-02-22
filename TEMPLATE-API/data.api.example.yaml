@@ -1,0 +1,15 @@
+# DefaultName: HelloWorld
+# ApiName: API
+# DeploymentName: MyDeployment
+# ApiTitle: API
+# StageName: api
+
+Paths:
+    - Path: /
+      Method: x-amazon-apigateway-any-method
+      LambdaArn: "!ImportValue LAMBDA-Test"
+    - Path: /{proxy+}
+      Method: get
+      LambdaArn: "!GetAtt Function.Arn"
+
+# PrintApiUrl: true

@@ -4,20 +4,14 @@ This is not a stack.
 
 ## Configuration
 
-### [data.example.yaml](data.example.yaml)
+### [data.lambda.example.yaml](data.lambda.example.yaml)
 
 ```yaml
 DefaultName: Default
-FunctionName: MyFunctionName
-# RoleName: MyRoleName
-# LogGroupName: MyLogGroupName
-# PolicyName: MyPolicyName
-# PermissionName: MyPermissionName
-# EventName: MyEventName
 
-Runtime: nodejs
+Runtime: python2.7
 Handler: handler.handler
-Zip: mylambda.zip
+Zip: lambda.zip
 
 LogGroupRetentionInDays: 7
 Timeout: 10
@@ -42,13 +36,6 @@ Permissions:
 Schedules:
     - 'cron(0 18 * * ? *)'
     - 'rate(2 minutes)'
-
-Outputs:
-    Hello:
-        Value: World
-    FunctionArn:
-        Value: "!GetAtt MyFunctionName.Arn"
-        ExportName: "!Sub '${AWS::StackName}'"
 ```
 
 | Name                    | Type                                  |
@@ -59,4 +46,3 @@ Outputs:
 | Environment             | Lambda environment dictionary.        |
 | Policies                | List of [policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html). |
 | Schedules               | List of [schedule expressions](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html). |
-| Outputs                 | Template outputs dictionary.          |

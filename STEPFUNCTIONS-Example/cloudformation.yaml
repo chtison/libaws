@@ -2,9 +2,9 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Resources:
 
-    {{- template "lambda.yaml" dictInterfaceToInterface .Lambda.HelloWorld "Include" true }}
+    {{- template "lambda.yaml" .Lambda.HelloWorld }}
 
-    {{- template "lambda.yaml" dictInterfaceToInterface .Lambda.ByeWorld "Include" true }}
+    {{- template "lambda.yaml" .Lambda.ByeWorld }}
 
     StateMachine:
         Type: AWS::StepFunctions::StateMachine

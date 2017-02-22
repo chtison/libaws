@@ -33,10 +33,3 @@ Permissions:
 Schedules:
     - 'cron(0 18 * * ? *)'
     - 'rate(2 minutes)'
-
-Outputs:
-    Hello:
-        Value: World
-    FunctionArn:
-        Value: "!GetAtt MyFunctionName.Arn"
-        ExportName: "!Sub '${AWS::StackName}'"

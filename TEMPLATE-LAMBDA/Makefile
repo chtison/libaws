@@ -1,5 +1,5 @@
 TEMPLATE  := lambda.yaml
-DATA_YAML := data.example.yaml
+DATA_YAML := data.lambda.example.yaml
 
 default-cmd: template
 

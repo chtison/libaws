@@ -1,0 +1,34 @@
+{{- $ApiName        := (or .ApiName        (printf "Api%s"        (or .DefaultName ""))) }}
+{{- $DeploymentName := (or .DeploymentName (printf "Deployment%s" (or .DefaultName ""))) }}
+{{- $ApiTitle       := (or .ApiTitle $ApiName )                                          }}
+{{- $StageName      := (or .StageName "api")                                             }}
+
+{{- if .PrintApiUrl -}}
+!Sub 'https://${ {{- $ApiName -}} }.execute-api.${AWS::Region}.amazonaws.com/{{ $StageName }}'
+{{- else }}
+    {{ $ApiName }}:
+        Type: AWS::ApiGateway::RestApi
+        Properties:
+            Body:
+                swagger: '2.0'
+                info:
+                    title: {{ $ApiTitle }}
+                    version: latest
+                paths:
+{{- range $_, $e := .Paths }}
+                    {{ $e.Path }}:
+                        {{ $e.Method }}:
+                            x-amazon-apigateway-integration:
+                                type: aws_proxy
+                                httpMethod: POST
+                                uri: !Sub
+                                    - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${functionArn}/invocations'
+                                    - functionArn: {{ $e.LambdaArn }}
+{{- end }}
+
+    {{ $DeploymentName }}:
+        Type: AWS::ApiGateway::Deployment
+        Properties:
+            RestApiId: !Ref {{ $ApiName }}
+            StageName: {{ $StageName }}
+{{- end }}

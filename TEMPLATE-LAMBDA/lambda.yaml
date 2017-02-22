@@ -5,11 +5,6 @@
 {{- $PermissionName := (or .PermissionName (printf "Permission%s" (or .DefaultName ""))) }}
 {{- $EventName      := (or .EventName      (printf "Event%s"      (or .DefaultName ""))) }}
 
-{{- if not .Include -}}
-AWSTemplateFormatVersion: 2010-09-09
-
-Resources:
-{{- end }}
     {{ $FunctionName }}:
         Type: AWS::Lambda::Function
         DependsOn: {{ $RoleName }}
@@ -106,13 +101,3 @@ Resources:
             Principal: events.amazonaws.com
             SourceArn: !GetAtt {{ $EventName }}.Arn
 {{- end }}
-
-{{- with .Outputs }}
-Outputs:
-{{- range $k, $v := . }}
-    {{ $k }}:
-        Value: {{ $v.Value }}
-{{- with $v.ExportName }}
-        Export:
-            Name: {{ . }}
-{{- end }}{{ end }}{{ end }}
