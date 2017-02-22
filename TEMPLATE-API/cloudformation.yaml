@@ -2,8 +2,8 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Resources:
 
-{{- range $_, $e := .Lambdas }}
-{{- template "lambda.yaml" $e }}
+{{- range $k, $v := .Lambdas }}
+{{- template "lambda.yaml" dictInterfaceToInterface $v "DefaultName" $k }}
 {{- end }}
 
 {{- template "api.yaml" .Api }}

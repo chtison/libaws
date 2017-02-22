@@ -1,12 +1,12 @@
 Lambdas:
-    Function:
+    Echo:
         Permissions:
             - Principal: apigateway.amazonaws.com
 Api:
     Paths:
         - Path: /
           Method: x-amazon-apigateway-any-method
-          LambdaArn: "!GetAtt Function.Arn"
+          LambdaArn: "!GetAtt FunctionEcho.Arn"
         - Path: /{proxy+}
           Method: x-amazon-apigateway-any-method
-          LambdaArn: "!GetAtt Function.Arn"
+          LambdaArn: "!GetAtt FunctionEcho.Arn"

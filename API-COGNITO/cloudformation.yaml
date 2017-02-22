@@ -4,9 +4,9 @@ Resources:
     #
     ## Lambda Functions
     #
-    {{- template "lambda.yaml" dictInterfaceToInterface .Lambda.Index "Include" true }}
-
-    {{- template "lambda.yaml" dictInterfaceToInterface .Lambda.CognitoPostConfirmation "Include" true }}
+    {{- range $k, $v := .Lambdas }}
+    {{- template "lambda.yaml" dictInterfaceToInterface $v "DefaultName" $k }}
+    {{- end }}
 
     #
     ## Rest API

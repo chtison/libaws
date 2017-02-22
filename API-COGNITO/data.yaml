@@ -4,15 +4,13 @@ ServiceToken_CognitoUserPoolClient: "!ImportValue CUSTOM-Cognito-User-Pool-Clien
 CognitoUserPoolName: API-COGNITO
 StageName: api
 
-Lambda:
+Lambdas:
     Index:
-        DefaultName: Index
         Zip: index.zip
         Permissions:
             - Principal: apigateway.amazonaws.com
 
     CognitoPostConfirmation:
-        DefaultName: CognitoPostConfirmation
         Zip: Cognito.PostConfirmation.zip
         Permissions:
             - Principal: cognito-idp.amazonaws.com
