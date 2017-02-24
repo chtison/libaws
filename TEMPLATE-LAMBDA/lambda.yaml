@@ -56,7 +56,7 @@
                           - logs:PutLogEvents
                       Resource: !GetAtt {{ $LogGroupName }}.Arn
 {{- range .Policies }}
-                    - Effect: {{ .Effect }}
+                    - Effect: {{ with .Effect }}{{ . }}{{ else }}Allow{{ end }}
                       Action:
 {{- range .Action }}
                           - {{ . }}

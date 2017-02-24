@@ -6,10 +6,20 @@
 
 Paths:
     - Path: /
-      Method: x-amazon-apigateway-any-method
-      LambdaArn: "!ImportValue LAMBDA-Test"
+      Methods:
+          - Method: x-amazon-apigateway-any-method
+            LambdaArn: "!ImportValue LAMBDA-Test"
     - Path: /{proxy+}
-      Method: get
-      LambdaArn: "!GetAtt Function.Arn"
+      Methods:
+          - Method: get
+            LambdaArn: "!GetAtt FunctionGET.Arn"
+            UserPoolName: UserPool1
+          - Method: post
+            LambdaArn: "!GetAtt FunctionPOST.Arn"
+            UserPoolName: UserPool1
+
+UserPools:
+    - Name: UserPool1
+      Arn: "!GetAtt MyUserPool.Arn"
 
 # PrintApiUrl: true

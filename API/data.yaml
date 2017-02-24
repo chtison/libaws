@@ -5,8 +5,10 @@ Lambdas:
 Api:
     Paths:
         - Path: /
-          Method: x-amazon-apigateway-any-method
-          LambdaArn: "!GetAtt FunctionEcho.Arn"
+          Methods:
+              - Method: x-amazon-apigateway-any-method
+                LambdaArn: "!GetAtt FunctionEcho.Arn"
         - Path: /{proxy+}
-          Method: x-amazon-apigateway-any-method
-          LambdaArn: "!GetAtt FunctionEcho.Arn"
+          Methods:
+              - Method: x-amazon-apigateway-any-method
+                LambdaArn: "!GetAtt FunctionEcho.Arn"

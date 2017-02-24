@@ -11,48 +11,13 @@ Resources:
     #
     ## Rest API
     #
-    API:
-        Type: AWS::ApiGateway::RestApi
-        DependsOn:
-            - FunctionIndex
-        Properties:
-            Body:
-                swagger: '2.0'
-                info:
-                    title: !Sub '${AWS::StackName}'
-                    version: latest
-                securityDefinitions:
-                    {{ .CognitoUserPoolName }}:
-                        type: apiKey
-                        name: Authorization
-                        in: header
-                        x-amazon-apigateway-authtype: cognito_user_pools
-                        x-amazon-apigateway-authorizer:
-                            providerARNs:
-                                - !GetAtt CognitoUserPool.Arn
-                            type: cognito_user_pools
-                paths:
-                    /:
-                        x-amazon-apigateway-any-method:
-                            security: [{{ .CognitoUserPoolName }}: []]
-                            x-amazon-apigateway-integration:
-                                type: aws_proxy
-                                httpMethod: POST
-                                uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionIndex.Arn}/invocations'
-
-    Deployment:
-        Type: AWS::ApiGateway::Deployment
-        DependsOn: API
-        Properties:
-            RestApiId: !Ref API
-            StageName: {{ .StageName }}
+    {{- template "api.yaml" .Api }}
 
     #
     ## Cognito User Pool & User Pool Client
     #
     CognitoUserPool:
         Type: AWS::CloudFormation::CustomResource
-        DependsOn: FunctionCognitoPostConfirmation
         Properties:
             ServiceToken: {{ .ServiceToken_CognitoUserPool }}
             Properties:
@@ -64,8 +29,6 @@ Resources:
                         RequireLowercase: false
                         RequireNumbers: false
                         RequireSymbols: false
-                LambdaConfig:
-                    PostConfirmation: !GetAtt FunctionCognitoPostConfirmation.Arn
                 AutoVerifiedAttributes: [email]
                 AliasAttributes: [email]
                 Schema:
@@ -92,22 +55,26 @@ Resources:
     #
     ## DynamoDB Users Table
     #
-    # DynamoTableUsers:
-    #     Type: AWS::DynamoDB::Table
-    #     Properties:
-    #         ProvisionedThroughput:
-    #             ReadCapacityUnits: 3
-    #             WriteCapacityUnits: 3
-    #         AttributeDefinitions:
-    #             - AttributeName: UserSubject
-    #               AttributeType: S
-    #         KeySchema:
-    #             - AttributeName: UserSubject
-    #               KeyType: HASH
+    DynamoTableUsers:
+        Type: AWS::DynamoDB::Table
+        Properties:
+            ProvisionedThroughput:
+                ReadCapacityUnits: 3
+                WriteCapacityUnits: 3
+            KeySchema:
+                - AttributeName: Id
+                  KeyType: HASH
+                - AttributeName: Email
+                  KeyType: RANGE
+            AttributeDefinitions:
+                - AttributeName: Id
+                  AttributeType: S
+                - AttributeName: Email
+                  AttributeType: S
 
 Outputs:
     ApiUrl:
-        Value: !Sub 'https://${API}.execute-api.${AWS::Region}.amazonaws.com/{{ .StageName }}'
+        Value: {{ template "api.yaml" dictInterfaceToInterface .Api "PrintApiUrl" true }}
     CognitoUserPoolId:
         Value: !Ref CognitoUserPool
     CognitoUserPoolClientId:

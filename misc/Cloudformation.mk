@@ -49,6 +49,7 @@ ifdef LAMBDA_FUNCTIONS
 	WD=$$(pwd) ; for FN in $(LAMBDA_FUNCTIONS) ; do \
 		cd $$WD/$(LAMBDA_DIR)/$$FN && \
 		$(MAKE) --no-print-directory zip && \
+		mkdir -p $$WD/$(OBJ_DIR)/`dirname $$FN` && \
 		cp -fT -- obj/lambda.zip $$WD/$(OBJ_DIR)/$$FN.zip  ; \
 	done
 endif

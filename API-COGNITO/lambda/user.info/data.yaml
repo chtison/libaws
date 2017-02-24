@@ -1,0 +1,5 @@
+DYNAMODB_TABLE_NAME_Users: API-COGNITO-DynamoTableUsers-6TLKTIO11748
+
+User:
+    Id: 2a68ea17-eb2b-4247-a492-61877053d732
+    Email: test@example.org
