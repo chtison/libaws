@@ -7,7 +7,7 @@ Here is a client for retrieving an ID token from COGNITO service and test it on 
 ```
 make build
 ```
-##### Run quickly
+##### Run
 ```
 make run USER_POOL_ID=<> CLIENT_ID=<> EMAIL=<> PASSWORD=<>
 ```
