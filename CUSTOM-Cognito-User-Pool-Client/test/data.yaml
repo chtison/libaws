@@ -1,2 +1,0 @@
-ServiceToken_CognitoUserPool: "!ImportValue CUSTOM-Cognito-User-Pool"
-ServiceToken_CognitoUserPoolClient: "!ImportValue CUSTOM-Cognito-User-Pool-Client"

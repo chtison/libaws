@@ -1,0 +1,18 @@
+{{- define "sns-topic" }}
+{{- $TopicLID        := (or .TopicLID "Topic"              ) }}
+{{- $SubscriptionLID := (or .SubscriptionLID "Subscription") }}
+
+    {{- $TopicLID }}:
+        Type: AWS::SNS::Topic
+
+{{- range $i, $e := .Subscriptions }}
+
+    {{ $SubscriptionLID }}{{ $i }}:
+        Type: AWS::SNS::Subscription
+        DependsOn: {{ $TopicLID }}
+        Properties:
+            TopicArn: !Ref {{ $TopicLID }}
+            Protocol: '{{ index $e 0 }}'
+            Endpoint: '{{ index $e 1 }}'
+{{- end }}
+{{- end }}

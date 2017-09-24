@@ -1,3 +1,0 @@
-STACK_NAME := SNS-TOPIC
-DATA_YAML  := data.yaml
-include ../misc/Cloudformation.mk

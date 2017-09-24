@@ -1,0 +1,3 @@
+{{- define "cognito-userpool" }}
+{{- "# Hello World !" }}
+{{- end }}

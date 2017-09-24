@@ -1,7 +1,0 @@
-Lambda:
-    HelloWorld:
-        DefaultName: HelloWorld
-        Zip: helloworld.zip
-    ByeWorld:
-        DefaultName: ByeWorld
-        Zip: byeworld.zip
