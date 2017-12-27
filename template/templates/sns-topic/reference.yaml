@@ -1,0 +1,22 @@
+TopicLID:
+    Type: String
+    Required: False
+    ValueIfNotSpecified: "Topic"
+    DefaultValue: "Topic"
+    Description: "The [logical ID](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-logicalid) of the resource in the cloudformation template"
+SubscriptionLID:
+    Type: String
+    Required: False
+    ValueIfNotSpecified: "Subscription"
+    DefaultValue: "Subscription"
+    Description: "Part of [logical ID](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-logicalid) of the resource in the cloudformation template"
+Subscriptions:
+    Type: [[String, String]]
+    Required: False
+    ValueIfNotSpecified: NULL
+    DefaultValue:
+        - - "sms"
+          - "+33122334455"
+        - - "email"
+          - "example@example.org"
+    Description: "List of arrays of length 2 which first element is [protocol](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html#cfn-sns-protocol) and second is [endpoint](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html#cfn-sns-endpoint)"
