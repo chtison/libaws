@@ -1,0 +1,5 @@
+AWSTemplateFormatVersion: 2010-09-09
+{% raw %}
+Resources:
+    {{ template "sns-topic" .Topic }}
+{% endraw %}

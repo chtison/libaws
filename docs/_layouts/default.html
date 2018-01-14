@@ -1,0 +1,25 @@
+---
+---
+
+<!doctype html>
+<html lang="en">
+{% include head.html %}
+<body>
+{% include topbar.html %}
+<div class="container-fluid">
+	<div class="row">
+		{% include leftbar.html %}
+		<main role="main" class="col-sm-9 offset-sm-3 col-lg-8 offset-lg-2">
+			{{ content }}
+		</main>
+		{% if page.rightbar %}
+			{% include rightbar.html links=page.rightbar %}
+		{% else %}
+			{% include rightbar.html links=layout.rightbar %}
+		{% endif %}
+
+	</div>
+</div>
+{% include footer.html %}
+</body>
+</html>

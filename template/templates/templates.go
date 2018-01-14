@@ -5,10 +5,35 @@ import (
 	"text/template"
 )
 
-const LibAwsYaml = `AWSTemplateFormatVersion: 2010-09-09
+const CloudFormationTmplYaml = `AWSTemplateFormatVersion: 2010-09-09
 
 Resources:
-    {{- /* Add resources below */}}`
+    {{- /* Add resources below */}}
+`
+const CloudFormationDataYaml = `
+`
+const LibawsYaml = `TemplateFiles: cloudformation.tmpl.yaml
+DataFiles: cloudformation.data.yaml
+`
+const Makefile = `.PHONY: default template clean
+
+TMPL_DEPS := cloudformation.tmpl.yaml cloudformation.data.yaml
+
+OUT_FILE  := cloudformation.yaml
+OUT_DIR   := out
+
+default: template
+
+$(OUT_DIR):
+	@mkdir -p $@
+
+template: $(OUT_DIR)/$(OUT_FILE)
+$(OUT_DIR)/$(OUT_FILE): $(OUT_DIR) $(TMPL_DEPS)
+	libaws template run > $@
+
+clean:
+	rm -rf -- $(OUT_DIR)
+`
 
 var Template = template.Must(template.New("libaws").Funcs(tmpl.Funcs()).Parse(`
 {{- define "sns-topic" }}
@@ -136,5 +161,61 @@ var Template = template.Must(template.New("libaws").Funcs(tmpl.Funcs()).Parse(`
 {{- end }}
 {{- define "cognito-userpool" }}
 {{- "# Hello World !" }}
+{{- end }}
+{{- define "api" }}
+{{- $ApiName        := (or .ApiName (printf "Api%s" (or .DefaultName ""))) }}
+{{- $ApiTitle       := (or .ApiTitle $ApiName ) }}
+{{- $StageName      := (or .StageName "api") }}
+{{- $DeploymentName := (strings.NewReplacer "-" "" ":" "" "." "" " " "" "+" "").Replace time.Now }}
+
+{{- if .PrintApiUrl -}}
+!Sub 'https://${ {{- $ApiName -}} }.execute-api.${AWS::Region}.amazonaws.com/{{ $StageName }}'
+{{- else }}
+    {{ $ApiName }}:
+        Type: AWS::ApiGateway::RestApi
+        Properties:
+            Body:
+                swagger: '2.0'
+                info:
+                    title: {{ $ApiTitle }}
+                    version: latest
+{{- with .UserPools }}
+                securityDefinitions:
+{{- range . }}
+                    {{ .Name }}:
+                        type: apiKey
+                        name: Authorization
+                        in: header
+                        x-amazon-apigateway-authtype: cognito_user_pools
+                        x-amazon-apigateway-authorizer:
+                            providerARNs:
+                                - {{ .Arn }}
+                            type: cognito_user_pools
+{{- end }}
+{{- end }}
+                paths:
+{{- range .Paths }}
+                    {{ .Path }}:
+{{- range .Methods }}
+                        {{ .Method }}:
+{{- with .UserPoolName }}
+                            security: [{{ . }}: []]
+{{- end }}
+                            x-amazon-apigateway-integration:
+                                type: aws_proxy
+                                httpMethod: POST
+                                uri: !Sub
+                                    - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${functionArn}/invocations'
+                                    - functionArn: {{ .LambdaArn }}
+{{- end }}
+{{- end }}
+
+    {{ $DeploymentName }}:
+        Type: AWS::ApiGateway::Deployment
+        DependsOn: {{ $ApiName }}
+        Properties:
+            RestApiId: !Ref {{ $ApiName }}
+            StageName: {{ $StageName }}
+{{- end }}
 {{- end }}
 `))

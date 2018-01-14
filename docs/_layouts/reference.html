@@ -1,0 +1,36 @@
+---
+layout: default
+rightbar:
+ Parameters: []
+ Example: []
+---
+
+{% assign data = site.data.reference[page.title] %}
+
+<h1>{{page.title}}</h1>
+{{ data.Description | markdownify }}
+<pre>{% raw %}{{ template sns-topic .Topic }}{% endraw %}</pre>
+
+<h2 id="parameters">Parameters</h2>
+<dl>
+{% assign layout.rightbar.Parameters = layout.rightbar.Parameters | concat: layout.rightbar.Parameters %}
+{% for arg in data.Args %}
+	<dt id="{{arg[0]}}">{{ arg[0] }}</dt>
+	<dd>
+		{{ arg[1].Description | markdownify }}
+		<p><em>Required:</em> {{ arg[1].Required | default: false }}</p>
+		<p><em>Type:</em> {{ arg[1].Type }}</p>
+	</dd>
+{% endfor %}
+</dl>
+
+<h2 id="example">Example</h2>
+
+<div class="la-example">
+	<span class="la-example-name" id="Template">cloudformation.tmpl.yaml</span>
+	{% highlight yaml %}{% include examples/{{page.title}}/cloudformation.tmpl.yaml %}{% endhighlight %}
+</div>
+<div class="la-example">
+	<span class="la-example-name" id="Data">cloudformation.data.yaml</span>
+	{% highlight yaml %}{% include examples/{{page.title}}/cloudformation.data.yaml %}{% endhighlight %}
+</div>

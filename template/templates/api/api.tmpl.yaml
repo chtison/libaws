@@ -1,0 +1,56 @@
+{{- define "api" }}
+{{- $ApiName        := (or .ApiName (printf "Api%s" (or .DefaultName ""))) }}
+{{- $ApiTitle       := (or .ApiTitle $ApiName ) }}
+{{- $StageName      := (or .StageName "api") }}
+{{- $DeploymentName := (strings.NewReplacer "-" "" ":" "" "." "" " " "" "+" "").Replace time.Now }}
+
+{{- if .PrintApiUrl -}}
+!Sub 'https://${ {{- $ApiName -}} }.execute-api.${AWS::Region}.amazonaws.com/{{ $StageName }}'
+{{- else }}
+    {{ $ApiName }}:
+        Type: AWS::ApiGateway::RestApi
+        Properties:
+            Body:
+                swagger: '2.0'
+                info:
+                    title: {{ $ApiTitle }}
+                    version: latest
+{{- with .UserPools }}
+                securityDefinitions:
+{{- range . }}
+                    {{ .Name }}:
+                        type: apiKey
+                        name: Authorization
+                        in: header
+                        x-amazon-apigateway-authtype: cognito_user_pools
+                        x-amazon-apigateway-authorizer:
+                            providerARNs:
+                                - {{ .Arn }}
+                            type: cognito_user_pools
+{{- end }}
+{{- end }}
+                paths:
+{{- range .Paths }}
+                    {{ .Path }}:
+{{- range .Methods }}
+                        {{ .Method }}:
+{{- with .UserPoolName }}
+                            security: [{{ . }}: []]
+{{- end }}
+                            x-amazon-apigateway-integration:
+                                type: aws_proxy
+                                httpMethod: POST
+                                uri: !Sub
+                                    - 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${functionArn}/invocations'
+                                    - functionArn: {{ .LambdaArn }}
+{{- end }}
+{{- end }}
+
+    {{ $DeploymentName }}:
+        Type: AWS::ApiGateway::Deployment
+        DependsOn: {{ $ApiName }}
+        Properties:
+            RestApiId: !Ref {{ $ApiName }}
+            StageName: {{ $StageName }}
+{{- end }}
+{{- end }}

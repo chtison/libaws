@@ -1,0 +1,9 @@
+safe: true
+strict_front_matter: true
+kramdown:
+    auto_ids: false
+defaults:
+    - scope:
+        path: ""
+      values:
+        title_append_brand: true

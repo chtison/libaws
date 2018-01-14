@@ -1,0 +1,18 @@
+<!-- LeftBar -->
+<div class="col-sm-3 col-lg-2 d-none d-sm-block" id="leftbar">
+	<form>
+		<input type="search" class="form-control" placeholder="Search..." autocomplete="off" spellcheck="false" disabled>
+	</form>
+	<nav class="flex-column">
+		<div class="active">
+			<a href="/reference" class="link">Reference</a>
+			<ul class="nav d-block">
+			{% for reference in site.data.reference %}
+				<li>
+					<a href="/reference/{{reference[0]}}" class="item {% if page.title == reference[0] %}active{% endif %}">{{reference[0]}}</a>
+				</li>
+			{% endfor %}
+			</ul>
+		</div>
+	</nav>
+</div>

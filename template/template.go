@@ -1,6 +1,8 @@
 package template
 
-import "github.com/chtison/libgo/cli"
+import (
+	"github.com/chtison/libgo/cli"
+)
 
 // CmdTemplate ...
 var (

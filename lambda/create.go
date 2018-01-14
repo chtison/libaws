@@ -1,32 +1,34 @@
 package lambda
 
-//go:generate templates/generate.sh
+//go:generate runtimes/generate.sh
 
 import (
 	"io"
 	"os"
 
+	"github.com/chtison/libaws/lambda/runtimes"
 	"github.com/chtison/libgo/cli"
 	"github.com/chtison/libgo/fmt"
-
-	"github.com/chtison/libaws/lambda/templates"
 )
 
 var (
 	cmdCreate         = cli.NewCommand("create")
 	flagCreateRuntime = cli.NewFlagString('r', "runtime", "python3.6")
-	runtimeMap        = map[string]func(string) error{
-		"python3.6": runtimePython36,
-	}
+	flagCreateName    = cli.NewFlagString('n', "name", "lambda")
 )
 
 func init() {
 	cmdCreate.Usage.Arguments = "PATH"
 	cmdCreate.Usage.Synopsys = "Create a new lambda function"
-	cmdCreate.Flags.Add(flagCreateRuntime)
+	cmdCreate.Flags.Add(flagCreateRuntime, flagCreateName)
 	cmdCreate.Function = cmdCreateFunction
 
-	flagCreateRuntime.Usage().Synopsys = "Set the runtime: python3.6"
+	availableRuntimes := make([]string, 0, len(runtimes.Runtimes))
+	for key := range runtimes.Runtimes {
+		availableRuntimes = append(availableRuntimes, key)
+	}
+	flagCreateRuntime.Usage().Synopsys = fmt.Sprintf("Available runtimes: %v Default: %s", availableRuntimes, flagCreateRuntime.Value)
+	flagCreateName.Usage().Synopsys = fmt.Sprintf("Name of the outputed file. Default: %s", flagCreateName.Value)
 }
 
 func cmdCreateFunction(cmd *cli.Command, args ...string) error {
@@ -35,7 +37,8 @@ func cmdCreateFunction(cmd *cli.Command, args ...string) error {
 		return cli.Usage(cmd, args...)
 	}
 	// Check runtime flag
-	if _, ok := runtimeMap[flagCreateRuntime.Value]; !ok {
+	t, ok := runtimes.Runtimes[flagCreateRuntime.Value]
+	if !ok {
 		return fmt.Errorf(`unknown runtime: "%s"`, flagCreateRuntime.Value)
 	}
 	// Create PATH
@@ -44,25 +47,25 @@ func cmdCreateFunction(cmd *cli.Command, args ...string) error {
 	if err := os.Chdir(args[0]); err != nil {
 		return err
 	}
-	// Call runtime function
-	if err := runtimeMap[flagCreateRuntime.Value](args[0]); err != nil {
+	// Create file
+	if err := createRuntime(args[0], t); err != nil {
 		return err
 	}
 	return nil
 }
 
-func runtimePython36(path string) error {
-	// Create file
-	if w, err := os.OpenFile("lambda.py", os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600); err == nil {
+func createRuntime(path string, t *runtimes.Runtime) error {
+	fileName := flagCreateName.Value + "." + t.Extension
+	// Create lambda function
+	if w, err := os.OpenFile(fileName, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600); err == nil {
 		defer w.Close()
 		// Write template to file
-		if _, err = io.WriteString(w, templates.Python36+"\n"); err != nil {
+		if _, err = io.WriteString(w, t.Template); err != nil {
 			return err
 		}
 	} else {
 		return err
 	}
-	// Warn the user about created file
-	fmt.Printfln(`%s/%s successfully created`, path, "lambda.py")
+	fmt.Printfln(`%s/%s successfully created`, path, fileName)
 	return nil
 }

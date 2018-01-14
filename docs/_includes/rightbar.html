@@ -1,0 +1,11 @@
+<!-- RightBar -->
+<div class="col-lg-2 d-none d-lg-block pt-4" id="rightbar">
+	<nav class="nav flex-column">
+		{% for link in include.links %}
+		<a href="#{{link[0] | downcase}}" class="nav-link">{{link[0]}}</a>
+		{% for link in link[1] %}
+		<a href="#{{link | downcase}}" class="nav-link nav-sublink">{{link}}</a>
+		{% endfor %}
+		{% endfor %}
+	</nav>
+</div>

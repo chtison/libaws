@@ -1,0 +1,128 @@
+---
+---
+
+$topbar: 3.7rem
+
+body
+	padding-top: $topbar
+
+#topbar nav
+	height: $topbar
+	border-bottom: 1px solid #eee
+	#github-icon
+		color: black
+		box-sizing: border-box
+	#github-icon:hover
+		box-shadow: inset 0px 0px 0px 1px darkgrey
+		border-radius: 2px
+		color: #222222
+		text-decoration: none
+
+.sidebar
+	position: fixed
+	top: $topbar
+	z-index: 1000
+	overflow-x: hidden
+	overflow-y: auto
+
+#leftbar
+	@extend .sidebar
+	left: 0
+	bottom: 0
+	border-right: 1px solid #eee
+	padding-top: 1rem
+	padding-left: 0
+	padding-right: 0
+	form
+		padding-left: 1rem
+		padding-right: 1rem
+		padding-bottom: 1rem
+		border-bottom: 1px solid rgba(0,0,0,.05)
+		margin-bottom: 1rem
+	nav
+		div
+			font-weight: 400
+			line-height: 1.5
+			a
+				display: block
+			a:hover
+				text-decoration: none
+			.link
+				padding: .25rem 1.5rem
+				font-weight: 500
+				line-height: 1.5
+				font-size: 1.1rem
+				color: #212529
+			.item
+				padding: .25rem 1.5rem
+				font-size: 90%
+				font-weight: 500
+				color: rgba(0,0,0,.65)
+			.item.active, .item:hover
+				color: rgba(0,0,0,.85)
+		div.active .link
+			color: rgba(0,0,0,.85)
+
+
+#rightbar
+	@extend .sidebar
+	right: 0
+	a
+		border-left: 1px solid #eee
+		color: #99979c
+		padding: .125rem 1.5rem
+		font-size: .875rem
+	.nav-sublink
+		padding-left: 3rem
+
+main
+	padding-top: 2rem
+	padding-bottom: 1rem
+	padding-left: 3rem!important
+	h1
+		font-size: 3rem
+		font-weight: 300
+		margin-bottom: .5rem
+		+ p
+			font-size: 1.4rem
+			font-weight: 280
+			margin-bottom: 1.5rem
+	pre
+			padding-left: 1rem
+			margin-bottom: 1rem
+	h2
+		margin-bottom: 1.1rem
+	h2[id]::before, h3[id]::before
+		content: ""
+		margin-top: -$topbar
+		height: $topbar + 1rem
+		display: block
+		visibility: hidden
+	dl
+		margin-bottom: 1.5rem
+		dt
+			margin-bottom: 1rem
+			font-weight: 300
+		dd
+			padding-left: 2.5rem
+			p
+				padding: 0
+				margin-bottom: 1rem
+				line-height: 1.5rem
+	.la-example
+		figure
+			padding: 1.5rem
+			background-color: #f7f7f9
+			pre
+				margin: 0
+	.la-example-name
+		background-color: #f7f7f9
+		padding-left: 8px
+		padding-right: 8px
+		padding-bottom: 4px
+		padding-top: 4px
+		font-size: 0.8rem
+		border-top-left-radius: 5px
+		border-top-right-radius: 5px
+		border: 1px solid #eee
+		border-bottom: 0px

@@ -1,0 +1,38 @@
+Description: |
+    This file defines metadatas for the libaws binary.
+
+Args:
+    TemplateFiles:
+        Type: 'String | {String: String} | [String | {String: String}]'
+        Description: |
+            One or more template file path.
+
+    TemplateToExecute:
+        Type: String
+        Description: |
+            The name of the template to execute. If not specified, the first
+            template in [TemplateFiles](#TemplateFiles) field is used.
+
+    DataFiles:
+        Type: String | [String]
+        Description: |
+            One or more data files in yaml format.
+
+    LibAwsFiles:
+        Type: String | [String]
+        Description: |
+            One or more libaws files.
+
+    Lambda:
+        Type: '{String: [String]}'
+        Description: |
+            List of filenames formated like in a .gitignore.
+        Args:
+            Path:
+                Type: String
+                Description: The path where reside the lambda function.
+            Ignore:
+                Type: [String]
+                Description: |
+                    List of regexs to match the files to ignore in the outputed
+                    zip file. See [.gitignore format](https://git-scm.org/.gitignore)

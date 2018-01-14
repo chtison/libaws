@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+    Topic:
+        Type: AWS::SNS::Topic
+
+    Subscription0:
+        Type: AWS::SNS::Subscription
+        DependsOn: Topic
+        Properties:
+            TopicArn: !Ref Topic
+            Protocol: 'email'
+            Endpoint: 'libaws@example.org'
+
+    Subscription1:
+        Type: AWS::SNS::Subscription
+        DependsOn: Topic
+        Properties:
+            TopicArn: !Ref Topic
+            Protocol: 'phone'
+            Endpoint: '+33611223344'

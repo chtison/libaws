@@ -1,0 +1,30 @@
+Description: |
+    Template ***sns-topic*** creates an [AWS::SNS::Topic](
+    https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html)
+    and zero or more [AWS::SNS::Subscription](
+    https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html).
+
+Args:
+    TopicLID:
+        Type: String
+        DefaultValue: "Topic"
+        Description: |
+            The [AWS CF Logical ID](
+            https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-logicalid)
+            of the resource.
+
+    SubscriptionLID:
+        Type: String
+        DefaultValue: "Subscription"
+        Description: |
+            Part of the [AWS CF Logical ID](
+            https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-logicalid)
+            of the resource in the cloudformation template.
+    Subscriptions:
+        Type: "[[String, String]]"
+        Description: |
+            List of arrays of length 2 which first element is [protocol](
+            https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html#cfn-sns-protocol)
+            and second one is the [endpoint](
+            https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html#cfn-sns-endpoint)
+            depending on protocol.

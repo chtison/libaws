@@ -10,12 +10,18 @@ import (
 	"text/template"
 )
 
-const LibAwsYaml = \``cat libaws.yaml`\`
+const CloudFormationTmplYaml = \``cat libaws/cloudformation.tmpl.yaml`
+\`
+const CloudFormationDataYaml = \``cat libaws/cloudformation.data.yaml`
+\`
+const LibawsYaml = \``cat libaws/libaws.yaml`
+\`
 
 var Template = template.Must(template.New("libaws").Funcs(tmpl.Funcs()).Parse(\`
 `cat sns-topic/sns-topic.tmpl.yaml`
 `cat lambda/lambda.tmpl.yaml`
 `cat cognito-userpool/cognito-userpool.tmpl.yaml`
+`cat api/api.tmpl.yaml`
 \`))
 EOF
 

@@ -1,0 +1,6 @@
+Topic:
+    Subscriptions:
+        - - 'email'
+          - 'libaws@example.org'
+        - - 'phone'
+          - '+33611223344'

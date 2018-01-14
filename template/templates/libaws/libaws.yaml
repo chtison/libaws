@@ -1,0 +1,2 @@
+TemplateFiles: cloudformation.tmpl.yaml
+DataFiles: cloudformation.data.yaml
