@@ -5,9 +5,8 @@ package template
 import (
 	"os"
 
+	"github.com/chtison/libaws/pkg/libaws"
 	"github.com/chtison/libgo/cli"
-
-	"github.com/chtison/libaws/libaws"
 )
 
 var (
@@ -24,7 +23,7 @@ func cmdRunFunction(cmd *cli.Command, args ...string) error {
 	if len(args) != 0 {
 		return cli.Usage(cmd, args...)
 	}
-	laws, err := libaws.NewLibAwsFromFlagConfig()
+	laws, err := libaws.NewLibawsFromFlagConfig()
 	if err != nil {
 		return err
 	}

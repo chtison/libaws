@@ -1,7 +1,7 @@
 package lambda
 
 import (
-	"github.com/chtison/libaws/libaws"
+	"github.com/chtison/libaws/pkg/libaws"
 	"github.com/chtison/libgo/cli"
 )
 
@@ -16,10 +16,9 @@ func init() {
 }
 
 func cmdZipFunction(cmd *cli.Command, args ...string) error {
-	laws, err := libaws.NewLibAwsFromFlagConfig()
+	laws, err := libaws.NewLibawsFromFlagConfig()
 	if err != nil {
 		return err
 	}
-
 	return laws.ZipLambda("")
 }

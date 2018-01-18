@@ -1,3 +1,41 @@
+package templates
+
+// CloudFormationTmplYaml ...
+const CloudFormationTmplYaml = `AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+    {{- /* Add resources below */}}
+`
+
+// CloudFormationDataYaml ...
+const CloudFormationDataYaml = `
+`
+
+// LibawsYaml ...
+const LibawsYaml = `Templates:
+    - Path: cloudformation.tmpl.yaml
+`
+
+// Templates ...
+var Templates = `
+{{- define "sns-topic" }}
+{{- $TopicLID        := (or .TopicLID "Topic"              ) }}
+{{- $SubscriptionLID := (or .SubscriptionLID "Subscription") }}
+
+    {{- $TopicLID }}:
+        Type: AWS::SNS::Topic
+
+{{- range $i, $e := .Subscriptions }}
+
+    {{ $SubscriptionLID }}{{ $i }}:
+        Type: AWS::SNS::Subscription
+        DependsOn: {{ $TopicLID }}
+        Properties:
+            TopicArn: !Ref {{ $TopicLID }}
+            Protocol: '{{ index $e 0 }}'
+            Endpoint: '{{ index $e 1 }}'
+{{- end }}
+{{- end }}
 {{- define "lambda" }}
 {{- $FunctionName   := (or .FunctionName   (printf "Function%s"   (or .DefaultName ""))) }}
 {{- $RoleName       := (or .RoleName       (printf "Role%s"       (or .DefaultName ""))) }}
@@ -5,6 +43,8 @@
 {{- $PolicyName     := (or .PolicyName     (printf "Policy%s"     (or .DefaultName ""))) }}
 {{- $PermissionName := (or .PermissionName (printf "Permission%s" (or .DefaultName ""))) }}
 {{- $EventName      := (or .EventName      (printf "Event%s"      (or .DefaultName ""))) }}
+{{- $S3Bucket       := (or .S3Bucket       (libaws.S3Bucket ))                           }}
+{{- $ZipFile        := (printf "_out/lambda/%s.zip" .Path) }}
 
     {{- $FunctionName }}:
         Type: AWS::Lambda::Function
@@ -12,7 +52,11 @@
         Properties:
             Runtime: {{ with .Runtime }}{{ . }}{{ else }}python3.6{{ end }}
             Handler: {{ with .Handler }}{{ . }}{{ else }}lambda.handler{{ end }}
-            Code: {{ with .Zip }}{{ . }}{{ else }}lambda.zip{{ end }}
+            Code:
+{{- if .Deploy }}
+                S3Bucket: {{ $S3Bucket }}
+                S3Key: {{ call libaws.Sha256File $ZipFile }}
+{{- else }} {{ $ZipFile }} {{- end }}
             Role: !GetAtt {{ $RoleName }}.Arn
 {{- with .Timeout }}
             Timeout: {{ . }}
@@ -103,3 +147,4 @@
             SourceArn: !GetAtt {{ $EventName }}.Arn
 {{- end }}
 {{- end }}
+`

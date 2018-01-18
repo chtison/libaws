@@ -3,7 +3,7 @@
 cd -P -- `dirname -- $0`
 
 cat > runtimes.go << EOF
-package lambda
+package runtimes
 
 // Runtime ...
 type Runtime struct {
@@ -11,19 +11,21 @@ type Runtime struct {
 	Template  string
 }
 
-// Templates ...
-var runtimes = map[string]*Runtime{
+// Runtimes ...
+var Runtimes = map[string]*Runtime{
 	"python2.7": &Runtime{
 		Extension: "py",
-		Template: \``cat runtimes/lambda.2.7.py`
+		Template: \``cat lambda.2.7.py`
 \`,
 	},
 	"python3.6": &Runtime{
 		Extension: "py",
-		Template: \``cat runtimes/lambda.3.6.py`
+		Template: \``cat lambda.3.6.py`
 \`,
 	},
 }
 EOF
 
-echo "runtimes.go successfully created"
+goimports -w runtimes.go
+
+echo "`dirname -- $0`/runtimes.go successfully created"

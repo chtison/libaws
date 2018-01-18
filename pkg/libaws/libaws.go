@@ -3,17 +3,17 @@ package libaws
 import (
 	"archive/zip"
 	"bytes"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
-	"text/template"
 
-	"github.com/chtison/libaws/libaws/format"
-	"github.com/chtison/libaws/template/templates"
+	"github.com/chtison/libaws/pkg/config"
+	"github.com/chtison/libaws/pkg/fileutils"
+	"github.com/chtison/libaws/pkg/templates"
 	"github.com/chtison/libgo/cli"
-	"github.com/chtison/libgo/fmt"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -27,57 +27,38 @@ func init() {
 	FlagConfig.Usage().Synopsys = "Required. Set the libaws configuration file path. Default: libaws.yaml"
 }
 
-// WriteFile ...
-func WriteFile(filename, content string) error {
-	w, err := os.OpenFile(filename, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+// Libaws ...
+type Libaws struct {
+	Root     *config.Root
+	Template *templates.Template
+	Data     map[string]interface{}
+}
+
+// NewLibaws ...
+func NewLibaws() *Libaws {
+	return &Libaws{}
+}
+
+// NewLibawsFromFlagConfig ...
+func NewLibawsFromFlagConfig() (*Libaws, error) {
+	b, err := ioutil.ReadFile(FlagConfig.Value)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	defer w.Close()
-	if _, err = io.WriteString(w, content); err != nil {
-		return err
+	libaws := NewLibaws()
+	if err := yaml.Unmarshal(b, &libaws.Root); err != nil {
+		return nil, err
 	}
-	fmt.Printfln(`%s successfully created`, filename)
-	return nil
-}
-
-// ReadYamlFile ...
-func ReadYamlFile(filename string, data interface{}) error {
-	b, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return err
-	}
-	if err := yaml.Unmarshal(b, data); err != nil {
-		return err
-	}
-	return nil
-}
-
-// LibAws ...
-type LibAws struct {
-	Root     *format.Root
-	Template *template.Template
-	Data     interface{}
-}
-
-// NewLibAws ...
-func NewLibAws() *LibAws {
-	return &LibAws{}
-}
-
-// NewLibAwsFromFlagConfig ...
-func NewLibAwsFromFlagConfig() (*LibAws, error) {
-	libaws := NewLibAws()
-	if err := ReadYamlFile(FlagConfig.Value, &libaws.Root); err != nil {
+	if err := yaml.Unmarshal(b, &libaws.Data); err != nil {
 		return nil, err
 	}
 	return libaws, nil
 }
 
 // ReadDataFiles ...
-func (libaws *LibAws) ReadDataFiles() error {
+func (libaws *Libaws) ReadDataFiles() error {
 	for _, filename := range libaws.Root.Datas {
-		if err := ReadYamlFile(filename, &libaws.Data); err != nil {
+		if err := fileutils.ReadYamlFile(filename, &libaws.Data); err != nil {
 			return err
 		}
 	}
@@ -85,7 +66,7 @@ func (libaws *LibAws) ReadDataFiles() error {
 }
 
 // ReadTemplateFiles ...
-func (libaws *LibAws) ReadTemplateFiles() error {
+func (libaws *Libaws) ReadTemplateFiles() error {
 	for _, t := range libaws.Root.Templates {
 		name := t.Name
 		if name == "" {
@@ -99,9 +80,9 @@ func (libaws *LibAws) ReadTemplateFiles() error {
 }
 
 // AddTemplate ...
-func (libaws *LibAws) AddTemplate(name, filename string) error {
+func (libaws *Libaws) AddTemplate(name, filename string) error {
 	if libaws.Template == nil {
-		libaws.Template = template.Must(templates.Template.Clone())
+		libaws.ReloadTemplate()
 	}
 	b, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -116,8 +97,21 @@ func (libaws *LibAws) AddTemplate(name, filename string) error {
 	return nil
 }
 
+// ReloadTemplate ...
+func (libaws *Libaws) ReloadTemplate() {
+	if libaws.Template == nil {
+		libaws.Template = templates.New()
+	}
+	if libaws.Root.S3Bucket != "" {
+		libaws.Template.Libaws.S3Bucket = libaws.Root.S3Bucket
+	}
+	if libaws.Root.S3Prefix != "" {
+		libaws.Template.Libaws.S3Prefix = libaws.Root.S3Prefix
+	}
+}
+
 // ZipLambda ...
-func (libaws *LibAws) ZipLambda(path string) error {
+func (libaws *Libaws) ZipLambda(path string) error {
 	if len(libaws.Root.Lambdas) == 0 {
 		return fmt.Errorf(`no lambda function to zip`)
 	}
@@ -139,7 +133,7 @@ func (libaws *LibAws) ZipLambda(path string) error {
 	return nil
 }
 
-func (libaws *LibAws) zipLambda(lambdaPath string, lambda format.Lambda) error {
+func (libaws *Libaws) zipLambda(lambdaPath string, lambda *config.Lambda) error {
 	outPath, err := libaws.getOutputLambdaZipFilePath(lambdaPath, lambda)
 	if err != nil {
 		return err
@@ -187,7 +181,7 @@ func (libaws *LibAws) zipLambda(lambdaPath string, lambda format.Lambda) error {
 	return nil
 }
 
-func (libaws *LibAws) getOutputLambdaZipFilePath(path string, lambda format.Lambda) (string, error) {
+func (libaws *Libaws) getOutputLambdaZipFilePath(path string, lambda *config.Lambda) (string, error) {
 	outDir := lambda.OutDir
 	if outDir == "" {
 		outDir = libaws.Root.OutDir

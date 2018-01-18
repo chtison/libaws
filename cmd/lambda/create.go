@@ -1,12 +1,10 @@
 package lambda
 
-//go:generate runtimes/generate.sh
-
 import (
 	"io"
 	"os"
 
-	"github.com/chtison/libaws/lambda/runtimes"
+	"github.com/chtison/libaws/pkg/runtimes"
 	"github.com/chtison/libgo/cli"
 	"github.com/chtison/libgo/fmt"
 )

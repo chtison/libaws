@@ -4,11 +4,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/chtison/libaws/cmd/lambda"
+	"github.com/chtison/libaws/cmd/template"
 	"github.com/chtison/libgo/cli"
 	"github.com/chtison/libgo/fmt"
-
-	"github.com/chtison/libaws/lambda"
-	"github.com/chtison/libaws/template"
 )
 
 func main() {
