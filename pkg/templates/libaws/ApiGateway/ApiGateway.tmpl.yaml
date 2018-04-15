@@ -1,0 +1,59 @@
+{{- define "LIBAWS::ApiGateway" }}
+
+    {{- $m := map.Copy . }}
+
+	{{- /* Logical IDs */}}
+    {{- $m.SetDefault ""                                                           "LogicalIdSuffix" }}
+    {{- $m.SetDefault (printf "RestApi%s" $m.LogicalIdSuffix)                      "RestApi" "LogicalId" }}
+	{{- $m.SetDefault (printf "Deployment%s%d" $m.LogicalIdSuffix (time.Now.Unix)) "Deployment" "LogicalId" }}
+
+	{{- /* Globals */}}
+	{{- global.Set (printf "Deployment%sDependsOn" $m.LogicalIdSuffix) (slice.New) }}
+
+	{{- /* RestApi */}}
+    {{- template "AWS::ApiGateway::RestApi" $m.RestApi }}
+
+	{{- /* Methods */}}
+	{{- range $i, $v := $m.Methods }}
+		{{- $v := map.New $v }}
+		{{- $v.SetDefault (printf "Method%s%d" $m.LogicalIdSuffix $i)               "LogicalId"  }}
+		{{- $v.SetDefault "GET"                                                     "HttpMethod" }}
+		{{- $v.Set        (printf "!GetAtt %s.RootResourceId" $m.RestApi.LogicalId) "ResourceId" }}
+		{{- $v.Set        (global.Get "RestApiId")                                  "RestApiId" }}
+		{{- global.Append (printf "Deployment%sDependsOn" $m.LogicalIdSuffix) $v.LogicalId }}
+		{{- if $v.LambdaFunction }}
+			{{- map.SetDefault "AWS_PROXY" $v "Integration" "Type" }}
+			{{- map.SetDefault (printf "!Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${%s}/invocations'" $v.LambdaFunction ) $v.Integration "Uri" }}
+		{{- end }}
+		{{- template "AWS::ApiGateway::Method" $v }}
+	{{- end }}
+
+	{{- /* Resources */}}
+	{{- global.Set "ParentId" (printf "!GetAtt %s.RootResourceId" $m.RestApi.LogicalId)  }}
+	{{- template "LIBAWS::ApiGateway::Resources" $m.Resources }}
+
+	{{- /* Deployment */}}
+	{{- map.Set (global.Get "DeploymentDependsOn") $m.Deployment "DependsOn" }}
+	{{- map.SetDefault (global.Get "RestApiId") $m.Deployment "RestApiId" }}
+	{{- template "AWS::ApiGateway::Deployment" $m.Deployment }}
+
+{{- end }}
+
+{{- define "LIBAWS::ApiGateway::Resources" }}
+	{{- range $v := .Resources }}
+		{{- $Resource := map.Copy $v }}
+		{{- map.SetDefault (printf "%s%s" (or $.LogicalIdSuffix "") (strings.Title $Resource.PathPart)) $Resource "LogicalIdSuffix" }}
+		{{- map.SetDefault (printf "Resource%s" $Resource.LogicalIdSuffix) $Resource "LogicalId" }}
+		{{- map.Set $.ParentId $Resource "ParentId" }}
+		{{- map.Set (global.Get "RestApiId") $Resource "RestApiId" }}
+		{{- template "AWS::ApiGateway::Resource" $Resource }}
+		{{- if $Resource.Resources }}
+			{{- $Resources := map.New }}
+			{{- map.SetDefault $Resource.LogicalIdSuffix $Resources "LogicalIdSuffix" }}
+			{{- map.Set (printf "!Ref %s" $Resource.LogicalId) $Resources "ParentId"  }}
+			{{- map.Set (global.Get "RestApiId") $Resources "RestApiId" }}
+			{{- map.Set $Resource.Resources $Resources "Resources" }}
+			{{- template "LIBAWS::ApiGateway::Resources" $Resources }}
+		{{- end }}
+	{{- end }}
+{{- end }}

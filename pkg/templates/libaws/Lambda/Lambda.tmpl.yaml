@@ -1,0 +1,37 @@
+{{- define "LIBAWS::Lambda::old" }}
+
+	{{- $m := map.Copy . }}
+
+	{{- /* Logica IDs */}}
+	{{- $m.SetDefault ""                                       "LogicalIdSuffix"      }}
+	{{- $m.SetDefault (printf "Function%s" $m.LogicalIdSuffix) "Function" "LogicalId" }}
+	{{- $m.SetDefault (printf "Role%s"     $m.LogicalIdSuffix) "Role"     "LogicalId" }}
+	{{- $m.SetDefault (printf "LogGroup%s" $m.LogicalIdSuffix) "LogGroup" "LogicalId" }}
+	{{- $m.SetDefault (printf "Policy%s"   $m.LogicalIdSuffix) "Policy"   "LogicalId" }}
+
+	{{- /* Function */}}
+	{{- $m.SetDefault "go1.x"                                       "Function" "Runtime" }}
+	{{- $m.SetDefault "main"                                        "Function" "Handler" }}
+	{{- $m.SetDefault (printf "lambdas/%s.zip" $m.Function.Handler) "Function" "Code"    }}
+	{{- $m.Set        (printf "!GetAtt %s.Arn" $m.Role.LogicalId)   "Function" "Role"    }}
+	{{- template "AWS::Lambda::Function" $m.Function }}
+
+	{{- /* Role */}}
+	{{- $m.Set        (libaws.CreateAssumeRolePolicyDocument "lambda.amazonaws.com")                 "Role" "AssumeRolePolicyDocument" }}
+	{{- $m.SetDefault (slice.New "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole") "Role" "ManagedPolicyArns"        }}
+	{{- template "AWS::IAM::Role" $m.Role }}
+
+	{{- /* LogGroup */}}
+	{{- $m.SetDefault (printf "!Sub '/aws/lambda/${%s}'" $m.Function.LogicalId) "LogGroup" "LogGroupName" }}
+	{{- template "AWS::Logs::LogGroup" $m.LogGroup }}
+
+	{{- /* Permissions */}}
+	{{- range $i, $e := $m.Permissions }}
+		{{- $e := map.New $e }}
+	    {{- $e.SetDefault (printf "Permission%s%d" $m.LogicalIdSuffix $i) "LogicalId"    }}
+	    {{- $e.SetDefault "lambda:InvokeFunction"                         "Action"       }}
+	    {{- $e.Set        (printf "!GetAtt %s.Arn" $m.Function.LogicalId) "FunctionName" }}
+	    {{- template "AWS::Lambda::Permission" $e }}
+	{{- end }}
+
+{{- end }}

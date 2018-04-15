@@ -1,0 +1,7 @@
+{{- define "api.url" }}
+{{- $ApiName        := (or .ApiName (printf "Api%s" (or .DefaultName ""))) }}
+{{- $StageName      := (or .StageName "v1") -}}
+
+!Sub 'https://${ {{- $ApiName -}} }.execute-api.${AWS::Region}.amazonaws.com/{{ $StageName }}'
+
+{{- end }}

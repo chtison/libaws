@@ -1,0 +1,11 @@
+Lambdas:
+    - LogicalIdSuffix: Echo
+      Function:
+          Handler: echo
+      Permissions: [{Principal: apigateway.amazonaws.com}]
+
+Api:
+    RestApi:
+        Name: ExampleApi
+    Methods:
+        - LambdaFunction: FunctionEcho

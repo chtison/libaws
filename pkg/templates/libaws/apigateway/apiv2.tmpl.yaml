@@ -1,0 +1,30 @@
+{{- define "apiv2" }}
+{{- $ApiName := .ApiName | or (printf "Api%s" (.DefaultName | or "")) }}
+
+    {{ $ApiName }}:
+        Type: AWS::ApiGateway::RestApi
+        Properties:
+            Name: {{ $ApiName }}
+
+{{- range $k, $v := .Resources }}
+    Resource{{ $ApiName }}{{ $k }}:
+        Type: AWS::ApiGateway::Resource
+        Properties:
+            ParentId: !GetAtt {{ $ApiName }}.RootResourceId
+            PathPart: {{ $v.Path }}
+            RestApiId: !Ref {{ $ApiName }}
+
+{{- range $kk, $vv := $v.Methods }}
+    Method{{ $ApiName }}{{ $k }}x{{ $kk }}:
+        Type: AWS::ApiGateway::Method
+        Properties:
+            AuthorizationType: {{ with $vv.AuthorizationType }}{{ . }}{{ else }}NONE{{ end }}
+            HttpMethod: {{ with $vv.HttpMethod }}{{ . }}{{ else }}GET{{ end }}
+            ResourceId: !Ref Resource{{ $ApiName }}{{ $k }}
+            RestApiId: !Ref {{ $ApiName }}
+            Integration:
+                Type: AWS_PROXY
+                Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${.LambdaFunction}/invocations"
+{{- end }}
+{{- end }}
+{{- end }}
